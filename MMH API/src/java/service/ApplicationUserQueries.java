@@ -43,6 +43,33 @@ public class ApplicationUserQueries
         return EncryptedPassword;
     }
     
+    public String GetMoodList(Statement SQLStatement)
+    {
+        try
+        {
+            String SQLQuery = "SELECT Mood, Score, Emoticon "
+                    + "FROM MoodScore";
+            ResultSet rs = SQLStatement.executeQuery(SQLQuery);
+
+
+            String MoodScoreResult = "GetMoodList: ";
+            while (rs.next())
+            {
+                MoodScoreResult = MoodScoreResult + rs.getString("Mood") + ",";
+                MoodScoreResult = MoodScoreResult + rs.getString("Score") + ",";
+                MoodScoreResult = MoodScoreResult + rs.getString("Emoticon") + "\n";
+            }
+            return MoodScoreResult;
+        }
+        catch (SQLException err)
+        {
+            System.err.println("Error executing query");
+            err.printStackTrace(System.err);
+            System.exit(0);
+            return "";
+        }
+    }
+    
     //Gets the last ten music tracks. Gets the Name, Genre, Artist and Length.
     public String GetMusicHistory(String UserID, Statement SQLStatement)
     {

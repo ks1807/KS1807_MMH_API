@@ -90,37 +90,48 @@ public class MusicTrackFacadeREST extends AbstractFacade<MusicTrack>
     
     //Paths our API uses.
     @GET
-    @Path("TrackStarted/{UserID}/{TrackName}/{Genre}/{Artist}/{Length}")
+    @Path("TrackStarted/{UserID}/{TrackName}/{Genre}/{Artist}/{Length}/"
+            + "{BeforeMood}")
     @Produces({ MediaType.TEXT_PLAIN })
     public String TrackStarted(@PathParam("UserID") String UserID,
             @PathParam("TrackName") String TrackName,
             @PathParam("Genre") String Genre,
             @PathParam("Artist") String Artist,
-            @PathParam("Length") String Length)
+            @PathParam("Length") String Length,
+            @PathParam("BeforeMood") String BeforeMood)
     {
-        String[] Parameters = new String[5];
+        String[] Parameters = new String[6];
         Parameters[0] = UserID;
         Parameters[1] = TrackName;
         Parameters[2] = Genre;
         Parameters[3] = Artist;
         Parameters[4] = Length;
+        Parameters[5] = BeforeMood;
         
         ServerInterface.RemoveDashFromString(Parameters[0]);
         ServerInterface.RemoveDashFromString(Parameters[1]);
         ServerInterface.RemoveDashFromString(Parameters[2]);
         ServerInterface.RemoveDashFromString(Parameters[3]);
         ServerInterface.RemoveDashFromString(Parameters[4]);
+        ServerInterface.RemoveDashFromString(Parameters[5]);
         
         return ServerInterface.ConnectToServer("TrackStarted", Parameters);
     }
     
     @GET
-    @Path("TrackEnded/{MoodID}")
+    @Path("TrackEnded/{MoodID}/{AfterMood}/{UserLiked}/{DiaryEntryText}")
     @Produces({ MediaType.TEXT_PLAIN })
-    public String TrackEnded(@PathParam("MoodID") String MoodID)
+    public String TrackEnded(@PathParam("MoodID") String MoodID,
+            @PathParam("AfterMood") String AfterMood,
+            @PathParam("UserLiked") String UserLiked,
+            @PathParam("DiaryEntryText") String DiaryEntryText)
     {
-        String[] Parameters = new String[1];
+        String[] Parameters = new String[4];
         Parameters[0] = MoodID;
+        Parameters[1] = AfterMood;
+        Parameters[2] = UserLiked;
+        Parameters[3] = DiaryEntryText;
+        
         return ServerInterface.ConnectToServer("TrackEnded", Parameters);
     }
 }

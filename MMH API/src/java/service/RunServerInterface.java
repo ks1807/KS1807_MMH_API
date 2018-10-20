@@ -126,11 +126,17 @@ public class RunServerInterface
                 case "TrackStarted":
                     Result = Playlist.TrackStarted(QueryContents[0],
                             QueryContents[1], QueryContents[2],
-                            QueryContents[3], QueryContents[4], SQLStatement);                           
+                            QueryContents[3], QueryContents[4],
+                            QueryContents[5], SQLStatement);                           
                     break;
                 case "TrackEnded":
-                    Result = Playlist.TrackEnded(QueryContents[0], SQLStatement);
+                    Result = Playlist.TrackEnded(QueryContents[0],
+                            QueryContents[1], QueryContents[2],
+                            QueryContents[3], SQLStatement);
                     break;
+                case "GetMoodList":
+                    Result = UserQuery.GetMoodList(SQLStatement);
+                    break; 
                 case "GetMusicHistory":
                     Result = UserQuery.GetMusicHistory(QueryContents[0],
                             SQLStatement);

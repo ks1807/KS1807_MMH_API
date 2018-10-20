@@ -219,7 +219,7 @@ public class UserAccountFacadeREST extends AbstractFacade<UserAccount>
     @GET
     @Path("UpdatePassword/{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
-    public String UpdateSettings(@PathParam("UserID") String UserID,
+    public String UpdatePassword(@PathParam("UserID") String UserID,
             @PathParam("UserPassword") String UserPassword)
     {
         String[] Parameters = new String[2];

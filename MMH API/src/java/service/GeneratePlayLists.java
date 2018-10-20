@@ -720,14 +720,12 @@ public class GeneratePlayLists
     }
     
     private static String UserEnterMoodBefore(String UserID, int TrackID,
-            Statement SQLStatement)
+            String BeforeMood, Statement SQLStatement)
     {
         try
         {
             if (CheckMoodEntry(UserID, SQLStatement))
-            {                
-                String BeforeMood = OpenUserAlertBefore(UserID);
-                
+            {            
                 //Get the current Date/Time and format it for SQL Server.
                 Date CurrentDate = new Date();          
                 SimpleDateFormat SQLDateFormat =
@@ -774,7 +772,8 @@ public class GeneratePlayLists
         }
     }
     
-    private static boolean UserEnterMoodAfter(int MoodID, Statement SQLStatement)
+    private static boolean UserEnterMoodAfter(int MoodID, String AfterMood,
+            String UserLiked, String DiaryEntryText, Statement SQLStatement)
     {
         try
         {
@@ -790,12 +789,6 @@ public class GeneratePlayLists
             {
                UserID = Integer.parseInt(rs.getString("UserID"));
             }
-            
-            String AfterInformation[] =
-                    AfterInformation = OpenUserAlertAfter(UserID);
-            
-            String AfterMood = AfterInformation[0];
-            String UserLiked = AfterInformation[1];
             
             //Get the current Date/Time and format it for SQL Server.
             Date CurrentDate = new Date();          
@@ -849,10 +842,9 @@ public class GeneratePlayLists
                 
                 SQLStatement.execute(SQLQuery);
 
-                if (ScoreDiff < -3 || ScoreDiff > 3)
+                //Only make a diary entry if the user has entered text.
+                if (!DiaryEntryText.equals(""))
                 {
-                    String DiaryEntryText = OpenUserAlertDiaryEntry(UserID);
-                    
                     //Get the time the user made the diary entry.
                     CurrentDate = new Date();          
                     String DiaryEntryTime = SQLDateFormat.format(CurrentDate);
@@ -879,47 +871,24 @@ public class GeneratePlayLists
             return false;
         }
     }
-    
-    private static String OpenUserAlertBefore(String UserID)
-    {
-        String BeforeMood = "Happy";
-        
-        //RUN THE CALL TO THE BEFORE USER ALERT HERE
-        
-        return BeforeMood;
-    }
-    
-    private static String[] OpenUserAlertAfter(int UserID)
-    {
-        //RUN THE CALL TO THE AFTER USER ALERT HERE
-        
-        String AfterInformation[] = {"Sad", "Yes"};
-        return AfterInformation;
-    }
-    
-    private static String OpenUserAlertDiaryEntry(int UserID)
-    {
-        //RUN THE CALL TO THE DIARY USER ALERT HERE
-        
-        String DiaryInformation = "Dear Diary...";
-        return DiaryInformation;
-    }
-    
+
     public static String TrackStarted(String UserID, String TrackName, String Genre,
-            String Artist, String Length, Statement SQLStatement)
+            String Artist, String Length, String BeforeMood, Statement SQLStatement)
     {
         int TrackID = AddTrack(TrackName, Genre, Artist, Length,
                 SQLStatement);
-        String MoodID = UserEnterMoodBefore(UserID, TrackID, SQLStatement);
+        String MoodID = UserEnterMoodBefore(UserID, TrackID, BeforeMood, SQLStatement);
         return MoodID;
     }
     
-    public static String TrackEnded(String MoodID, Statement SQLStatement)
+    public static String TrackEnded(String MoodID, String AfterMood,
+            String UserLiked, String DiaryEntryText, Statement SQLStatement)
     {
         int MoodIDNum = Integer.parseInt(MoodID);
         if (MoodIDNum > 0)
         {
-            UserEnterMoodAfter(MoodIDNum, SQLStatement);
+            UserEnterMoodAfter(MoodIDNum, AfterMood, UserLiked, DiaryEntryText,
+                    SQLStatement);
             return "TrackEnded: " + Integer.toString(MoodIDNum);
         }
         else

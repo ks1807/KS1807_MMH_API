@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package service;
 
 import MMHPackage.MoodScore;
@@ -20,72 +15,86 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-/**
- *
- * @author Jonathon
- */
 @Stateless
 @Path("mmhpackage.moodscore")
-public class MoodScoreFacadeREST extends AbstractFacade<MoodScore> {
-
+public class MoodScoreFacadeREST extends AbstractFacade<MoodScore>
+{
+    RunServerInterface ServerInterface = new RunServerInterface();
     @PersistenceContext(unitName = "MMH_APIPU")
     private EntityManager em;
 
-    public MoodScoreFacadeREST() {
+    public MoodScoreFacadeREST()
+    {
         super(MoodScore.class);
     }
 
     @POST
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(MoodScore entity) {
+    public void create(MoodScore entity)
+    {
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") Integer id, MoodScore entity) {
+    public void edit(@PathParam("id") Integer id, MoodScore entity)
+    {
         super.edit(entity);
     }
 
     @DELETE
     @Path("{id}")
-    public void remove(@PathParam("id") Integer id) {
+    public void remove(@PathParam("id") Integer id)
+    {
         super.remove(super.find(id));
     }
 
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public MoodScore find(@PathParam("id") Integer id) {
+    public MoodScore find(@PathParam("id") Integer id)
+    {
         return super.find(id);
     }
 
     @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<MoodScore> findAll() {
+    public List<MoodScore> findAll()
+    {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<MoodScore> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
+    public List<MoodScore> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to)
+    {
         return super.findRange(new int[]{from, to});
     }
 
     @GET
     @Path("count")
     @Produces(MediaType.TEXT_PLAIN)
-    public String countREST() {
+    public String countREST()
+    {
         return String.valueOf(super.count());
     }
 
     @Override
-    protected EntityManager getEntityManager() {
+    protected EntityManager getEntityManager()
+    {
         return em;
     }
     
+    //Paths our API uses.
+    @GET
+    @Path("GetMoodList")
+    @Produces({ MediaType.TEXT_PLAIN })
+    public String GetMoodList()
+    {
+        return ServerInterface.ConnectToServer("GetMoodList", new String[0]);
+    }
 }
