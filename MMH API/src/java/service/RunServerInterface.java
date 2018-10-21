@@ -30,6 +30,11 @@ public class RunServerInterface
     
     private static String GetConfigurationDetails()
     {
+        //In case the file read fails.
+        String DefaultConnectionString =
+                "jdbc:sqlserver://PE-KS1807\\SQLEXPRESS:1433;databasename=" +
+                "MFMHDatabase_UAT;user=TestUser;password=P@ssw0rd1;";
+        
         //The name of the file to open. Note this is the following directory:
         //...\Glassfish\glassfish4\glassfish\domains\MMH\config\
         String ConfigurationFileName = "MMH_SQLConnectionInfo.ini";
@@ -45,21 +50,23 @@ public class RunServerInterface
             //Read first five lines of the configuration file only
             while((Line = bufferedReader.readLine()) != null && i < 5)
             {
-                ConfigurationItems[i] = Line;
-                i++;
+                //Ignore the line feed.
+                if (!Line.equals(""))
+                {
+                    ConfigurationItems[i] = Line;
+                    i++;
+                }
             }
             bufferedReader.close();
         }
+        //If file read failed, just use the default connection string.
         catch(FileNotFoundException ex)
         {
-            System.out.println("Unable to open server configuratioon file '" +
-                    ConfigurationFileName + "'");                
+            return DefaultConnectionString;
         }
         catch(IOException ex)
         {
-            System.out.println(
-                "Error reading server configuratioon file '" +
-                        ConfigurationFileName + "'");                  
+            return DefaultConnectionString;
         }
         
         //Get the part of the configuration line between the single quotes.
