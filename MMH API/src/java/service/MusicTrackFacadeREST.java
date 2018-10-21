@@ -90,8 +90,8 @@ public class MusicTrackFacadeREST extends AbstractFacade<MusicTrack>
     
     //Paths our API uses.
     @GET
-    @Path("TrackStarted/{TrackName}/{Genre}/{Artist}/{Length}/"
-            + "{BeforeMood}/{UserID}/{UserPassword}")
+    @Path("TrackStarted%2F{TrackName}%2F{Genre}%2F{Artist}%2F{Length}%2F"
+            + "{BeforeMood}%2F{UserID}%2F{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
     public String TrackStarted(
             @PathParam("TrackName") String TrackName,
@@ -111,20 +111,20 @@ public class MusicTrackFacadeREST extends AbstractFacade<MusicTrack>
         Parameters[5] = UserID;
         Parameters[6] = UserPassword;
         
-        ServerInterface.RemoveDashFromString(Parameters[0]);
-        ServerInterface.RemoveDashFromString(Parameters[1]);
-        ServerInterface.RemoveDashFromString(Parameters[2]);
-        ServerInterface.RemoveDashFromString(Parameters[3]);
-        ServerInterface.RemoveDashFromString(Parameters[4]);
-        ServerInterface.RemoveDashFromString(Parameters[5]);
-        ServerInterface.RemoveDashFromString(Parameters[6]);
+        Parameters[0] = ServerInterface.RemoveDashFromString(Parameters[0]);
+        Parameters[1] = ServerInterface.RemoveDashFromString(Parameters[1]);
+        Parameters[2] = ServerInterface.RemoveDashFromString(Parameters[2]);
+        Parameters[3] = ServerInterface.RemoveDashFromString(Parameters[3]);
+        Parameters[4] = ServerInterface.RemoveDashFromString(Parameters[4]);
+        Parameters[5] = ServerInterface.RemoveDashFromString(Parameters[5]);
+        Parameters[6] = ServerInterface.RemoveDashFromString(Parameters[6]);
         
         return ServerInterface.ConnectToServer("TrackStarted", Parameters);
     }
     
     @GET
-    @Path("TrackEnded/{MoodID}/{AfterMood}/{UserLiked}/{DiaryEntryText}/"
-            + "{UserID}/{UserPassword}")
+    @Path("TrackEnded%2F{MoodID}%2F{AfterMood}%2F{UserLiked}%2F{DiaryEntryText}%2F"
+            + "{UserID}%2F{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
     public String TrackEnded(@PathParam("MoodID") String MoodID,
             @PathParam("AfterMood") String AfterMood,
@@ -141,12 +141,12 @@ public class MusicTrackFacadeREST extends AbstractFacade<MusicTrack>
         Parameters[4] = UserID;
         Parameters[5] = UserPassword;
         
-        ServerInterface.RemoveDashFromString(Parameters[0]);
-        ServerInterface.RemoveDashFromString(Parameters[1]);
-        ServerInterface.RemoveDashFromString(Parameters[2]);
-        ServerInterface.RemoveDashFromString(Parameters[3]);
-        ServerInterface.RemoveDashFromString(Parameters[4]);
-        ServerInterface.RemoveDashFromString(Parameters[5]);
+        Parameters[0] = ServerInterface.RemoveDashFromString(Parameters[0]);
+        Parameters[1] = ServerInterface.RemoveDashFromString(Parameters[1]);
+        Parameters[2] = ServerInterface.RemoveDashFromString(Parameters[2]);
+        Parameters[3] = ServerInterface.RemoveDashFromString(Parameters[3]);
+        Parameters[4] = ServerInterface.RemoveDashFromString(Parameters[4]);
+        Parameters[5] = ServerInterface.RemoveDashFromString(Parameters[5]);
         
         return ServerInterface.ConnectToServer("TrackEnded", Parameters);
     }

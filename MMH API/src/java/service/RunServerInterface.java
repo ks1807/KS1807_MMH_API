@@ -18,7 +18,7 @@ public class RunServerInterface
     strings as empty*/
     public String RemoveDashFromString(String TheString)
     {
-        if (TheString.equals(""))
+        if (TheString.equals("-"))
         {
             return "";
         }
