@@ -90,23 +90,26 @@ public class MusicTrackFacadeREST extends AbstractFacade<MusicTrack>
     
     //Paths our API uses.
     @GET
-    @Path("TrackStarted/{UserID}/{TrackName}/{Genre}/{Artist}/{Length}/"
-            + "{BeforeMood}")
+    @Path("TrackStarted/{TrackName}/{Genre}/{Artist}/{Length}/"
+            + "{BeforeMood}/{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
-    public String TrackStarted(@PathParam("UserID") String UserID,
+    public String TrackStarted(
             @PathParam("TrackName") String TrackName,
             @PathParam("Genre") String Genre,
             @PathParam("Artist") String Artist,
             @PathParam("Length") String Length,
-            @PathParam("BeforeMood") String BeforeMood)
+            @PathParam("BeforeMood") String BeforeMood,
+            @PathParam("UserID") String UserID,
+            @PathParam("UserPassword") String UserPassword)
     {
-        String[] Parameters = new String[6];
-        Parameters[0] = UserID;
-        Parameters[1] = TrackName;
-        Parameters[2] = Genre;
-        Parameters[3] = Artist;
-        Parameters[4] = Length;
-        Parameters[5] = BeforeMood;
+        String[] Parameters = new String[7];
+        Parameters[0] = TrackName;
+        Parameters[1] = Genre;
+        Parameters[2] = Artist;
+        Parameters[3] = Length;
+        Parameters[4] = BeforeMood;
+        Parameters[5] = UserID;
+        Parameters[6] = UserPassword;
         
         ServerInterface.RemoveDashFromString(Parameters[0]);
         ServerInterface.RemoveDashFromString(Parameters[1]);
@@ -114,23 +117,36 @@ public class MusicTrackFacadeREST extends AbstractFacade<MusicTrack>
         ServerInterface.RemoveDashFromString(Parameters[3]);
         ServerInterface.RemoveDashFromString(Parameters[4]);
         ServerInterface.RemoveDashFromString(Parameters[5]);
+        ServerInterface.RemoveDashFromString(Parameters[6]);
         
         return ServerInterface.ConnectToServer("TrackStarted", Parameters);
     }
     
     @GET
-    @Path("TrackEnded/{MoodID}/{AfterMood}/{UserLiked}/{DiaryEntryText}")
+    @Path("TrackEnded/{MoodID}/{AfterMood}/{UserLiked}/{DiaryEntryText}/"
+            + "{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
     public String TrackEnded(@PathParam("MoodID") String MoodID,
             @PathParam("AfterMood") String AfterMood,
             @PathParam("UserLiked") String UserLiked,
-            @PathParam("DiaryEntryText") String DiaryEntryText)
+            @PathParam("DiaryEntryText") String DiaryEntryText,
+            @PathParam("UserID") String UserID,
+            @PathParam("UserPassword") String UserPassword)
     {
-        String[] Parameters = new String[4];
+        String[] Parameters = new String[6];
         Parameters[0] = MoodID;
         Parameters[1] = AfterMood;
         Parameters[2] = UserLiked;
         Parameters[3] = DiaryEntryText;
+        Parameters[4] = UserID;
+        Parameters[5] = UserPassword;
+        
+        ServerInterface.RemoveDashFromString(Parameters[0]);
+        ServerInterface.RemoveDashFromString(Parameters[1]);
+        ServerInterface.RemoveDashFromString(Parameters[2]);
+        ServerInterface.RemoveDashFromString(Parameters[3]);
+        ServerInterface.RemoveDashFromString(Parameters[4]);
+        ServerInterface.RemoveDashFromString(Parameters[5]);
         
         return ServerInterface.ConnectToServer("TrackEnded", Parameters);
     }

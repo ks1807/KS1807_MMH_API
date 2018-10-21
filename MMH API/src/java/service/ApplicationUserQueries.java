@@ -71,8 +71,15 @@ public class ApplicationUserQueries
     }
     
     //Gets the last ten music tracks. Gets the Name, Genre, Artist and Length.
-    public String GetMusicHistory(String UserID, Statement SQLStatement)
+    public String GetMusicHistory(String UserID, String UserPassword,
+            Statement SQLStatement)
     {
+        if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
+        {
+            return "GetMusicHistory: Incorrect UserID or Password."
+                    + " Query not executed.";
+        }
+        
         try
         {
             /*Gets the last ten music tracks that the user has listened to,
@@ -87,7 +94,7 @@ public class ApplicationUserQueries
                     " ORDER BY UserMood.MoodAfterTime DESC";
             ResultSet rs = SQLStatement.executeQuery(SQLQuery);
 
-            String MusicResults = "Music Results: ";    
+            String MusicResults = "GetMusicHistory:\n";    
             while (rs.next())
             {
                 MusicResults = MusicResults + rs.getString("TrackName") + ",";
@@ -106,8 +113,15 @@ public class ApplicationUserQueries
         }
     }
     
-    public String GetUserDetails(int UserID, Statement SQLStatement)
+    public String GetUserDetails(String UserID, String UserPassword,
+            Statement SQLStatement)
     {
+        if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
+        {
+            return "GetUserDetails: Incorrect UserID or Password."
+                    + " Query not executed.";
+        }
+        
         try
         {
             String SQLQuery = "SELECT FirstName, LastName, EmailAddress, "
@@ -115,7 +129,7 @@ public class ApplicationUserQueries
                     + "FROM UserAccount WHERE UserID = '" + UserID + "'";
             ResultSet rs = SQLStatement.executeQuery(SQLQuery);
 
-            String UserDetails = "";
+            String UserDetails = "GetUserDetails:\n";
             
             if (rs.next())
             {
@@ -141,17 +155,23 @@ public class ApplicationUserQueries
         }
     }
     
-    public String GetUserDetailsRegistration(String UserID,
+    public String GetUserDetailsRegistration(String UserID, String UserPassword,
                 Statement SQLStatement)
     {
+        if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
+        {
+            return "GetUserDetailsRegistration: Incorrect UserID or Password."
+                    + " Query not executed.";
+        }
+        
         try
         {
             String SQLQuery = "SELECT FirstName, LastName, EmailAddress, "
-                    + "DateOfBirth, Gender, UserPassword "
+                    + "DateOfBirth, Gender "
                     + "FROM UserAccount WHERE UserID = '" + UserID + "'";
             ResultSet rs = SQLStatement.executeQuery(SQLQuery);
 
-            String UserDetails = "";
+            String UserDetails = "GetUserDetailsRegistration:\n";
             
             if (rs.next())
             {
@@ -165,8 +185,6 @@ public class ApplicationUserQueries
                         rs.getString("DateOfBirth") + "\n";
                 UserDetails = UserDetails + "Gender: " +
                         rs.getString("Gender") + "\n";
-                UserDetails = UserDetails + "UserPassword: " +
-                        rs.getString("UserPassword");
             }
             return UserDetails;           
         }
@@ -198,17 +216,17 @@ public class ApplicationUserQueries
                 }
                 else
                 {
-                    return "-1";
+                    return "UserID: -1";
                 }
             }
-            return "-1";
+            return "UserID: -1";
         }
         catch (SQLException err)
         {
             System.err.println("Error executing query");
             err.printStackTrace(System.err);
             System.exit(0);
-            return "-1";
+            return "UserID: -1";
         }
     }
     
@@ -237,15 +255,22 @@ public class ApplicationUserQueries
         }
     }
     
-    public String GetUserSettings(String UserID, Statement SQLStatement)
+    public String GetUserSettings(String UserID, String UserPassword,
+            Statement SQLStatement)
     {
+        if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
+        {
+            return "GetUserSettings: Incorrect UserID or Password."
+                    + " Query not executed.";
+        }
+        
         try
         {
             String SQLQuery = "SELECT MakeRecommendations, MoodFrequency "
                     + "FROM UserSettings WHERE UserID = '" + UserID + "'";
             ResultSet rs = SQLStatement.executeQuery(SQLQuery);
 
-            String UserSettings = "";
+            String UserSettings = "GetUserSettings:\n";
             
             if (rs.next())
             {
@@ -328,8 +353,7 @@ public class ApplicationUserQueries
         try
         {
             String UserID = "";
-            UserPassword = EncryptPassword(UserPassword);
-
+            
             //Make the Email Address all lowercase to ensure case insensitive search.
             EmailAddress = EmailAddress.toLowerCase();
 
@@ -364,14 +388,12 @@ public class ApplicationUserQueries
         }
     }
     
-    public String UpdateNewUser(String UserID, String FirstName, String LastName,
+    public String UpdateNewUser(String FirstName, String LastName,
             String EmailAddress, String DateOfBirth, String Gender, String
-                    UserPassword, Statement SQLStatement)
+                    UserID, String UserPassword, Statement SQLStatement)
     {
         try
         {
-            UserPassword = EncryptPassword(UserPassword);
-
             //Make the Email Address all lowercase to ensure case insensitive search.
             EmailAddress = EmailAddress.toLowerCase();
 
@@ -395,11 +417,9 @@ public class ApplicationUserQueries
     
     public String UpdatePassword(String UserID, String UserPassword, Statement
             SQLStatement)
-    {
+    {   
         try
         {
-            UserPassword = EncryptPassword(UserPassword);
-
             String SQLQuery = "UPDATE UserAccount SET UserPassword ='" +
                     UserPassword + "' WHERE UserID = '" + UserID + "'";
                 SQLStatement.execute(SQLQuery);
@@ -414,10 +434,17 @@ public class ApplicationUserQueries
         return "";
     }
     
-    public String UpdateUser(String UserID, String FirstName, String LastName,
+    public String UpdateUser(String FirstName, String LastName,
             String EmailAddress, String DateOfBirth, String Gender,
+            String UserID, String UserPassword,
             Statement SQLStatement)
-    {
+    {     
+        if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
+        {
+            return "UpdateUser: Incorrect UserID or Password."
+                    + " Query not executed.";
+        }
+        
         try
         {
             //Make the Email Address all lowercase to ensure case insensitive search.
@@ -440,10 +467,17 @@ public class ApplicationUserQueries
         return "";
     }
     
-    public String UpdateUserSecondPage(String UserID, String MusicQuestionOne,
+    public String UpdateUserSecondPage(String MusicQuestionOne,
             String MusicQuestionTwo, String MusicQuestionThree, String
-                    MusicQuestionFour, Statement SQLStatement)
+                    MusicQuestionFour, String UserID, String UserPassword,
+                    Statement SQLStatement)
     {
+        if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
+        {
+            return "UpdateUserSecondPage: Incorrect UserID or Password."
+                    + " Query not executed.";
+        }
+        
         try
         {
             String SQLQuery = "UPDATE UserAccount SET MusicQuestionOne ='"
@@ -464,9 +498,16 @@ public class ApplicationUserQueries
         return "";
     }
     
-    public String UpdateSettings (String UserID, String MakeRecommendations,
-            String MoodFrequency, Statement SQLStatement)
+    public String UpdateSettings (String MakeRecommendations,
+            String MoodFrequency, String UserID, String UserPassword,
+            Statement SQLStatement)
     {
+        if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
+        {
+            return "UpdateSettings: Incorrect UserID or Password."
+                    + " Query not executed.";
+        }
+        
         try
         {
             String SQLQuery = "UPDATE UserSettings SET MakeRecommendations ='"
@@ -499,7 +540,6 @@ public class ApplicationUserQueries
             return UserID;
         }
 
-        UserPassword = EncryptPassword(UserPassword);
         String StoredPassword = GetUserPassword(UserIDNumberOnly, SQLStatement);
         
         /*Get rid of the substring in front if we are just doing an
@@ -519,8 +559,7 @@ public class ApplicationUserQueries
 
     public String VerifyPassword(String UserID, String UserPassword,
             Statement SQLStatement)
-    {
-        UserPassword = EncryptPassword(UserPassword);       
+    {     
         String StoredPassword = GetUserPassword(UserID, SQLStatement);
         
         /*Get rid of the substring in front if we are just doing an
@@ -529,11 +568,28 @@ public class ApplicationUserQueries
 
         if (UserPassword.equals(StoredPassword))
         {
-            return "Correct Password";
+            return "VerifyPassword: Correct Password";
         }
         else
         {
-            return "Incorrect Password";
+            return "VerifyPassword: Incorrect Password";
+        }
+    }
+    
+    //Similiar to VerifyPassword but returns a bool instead.
+    public boolean AuthenticateUser(String UserID, String UserPassword,
+            Statement SQLStatement)
+    {
+        String StoredPassword = GetUserPassword(UserID, SQLStatement);
+        StoredPassword = StoredPassword.replace("UserPassword: ","");
+        
+        if (StoredPassword.equals(UserPassword))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

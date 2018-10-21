@@ -749,18 +749,18 @@ public class GeneratePlayLists
                     String MoodID = "-1";
                     if (rs.next())
                     {
-                        MoodID = "MoodID: " + rs.getString("MoodID");
+                        MoodID = "TrackStarted: MoodID: " + rs.getString("MoodID");
                     } 
                     return MoodID;
                 }
                 else
                 {
-                    return "MoodID: -1";
+                    return "TrackStarted: MoodID: -1";
                 }
             }
             else
             {
-                return "MoodID: -1";
+                return "TrackStarted: MoodID: -1";
             }
         }
         catch (SQLException err)
@@ -872,9 +872,18 @@ public class GeneratePlayLists
         }
     }
 
-    public static String TrackStarted(String UserID, String TrackName, String Genre,
-            String Artist, String Length, String BeforeMood, Statement SQLStatement)
+    public static String TrackStarted(String TrackName, String Genre,
+            String Artist, String Length, String BeforeMood, String UserID,
+            String UserPassword, Statement SQLStatement)
     {
+        ApplicationUserQueries User = new ApplicationUserQueries();
+        
+        if (!User.AuthenticateUser(UserID, UserPassword, SQLStatement))
+        {
+            return "TrackStarted: Incorrect UserID or Password."
+                    + " Query not executed.";
+        }
+        
         int TrackID = AddTrack(TrackName, Genre, Artist, Length,
                 SQLStatement);
         String MoodID = UserEnterMoodBefore(UserID, TrackID, BeforeMood, SQLStatement);
@@ -882,8 +891,17 @@ public class GeneratePlayLists
     }
     
     public static String TrackEnded(String MoodID, String AfterMood,
-            String UserLiked, String DiaryEntryText, Statement SQLStatement)
+            String UserLiked, String DiaryEntryText, String UserID,
+            String UserPassword, Statement SQLStatement)
     {
+        ApplicationUserQueries User = new ApplicationUserQueries();
+        
+        if (!User.AuthenticateUser(UserID, UserPassword, SQLStatement))
+        {
+            return "TrackEnded: Incorrect UserID or Password."
+                    + " Query not executed.";
+        }
+        
         int MoodIDNum = Integer.parseInt(MoodID);
         if (MoodIDNum > 0)
         {

@@ -93,35 +93,47 @@ public class UserAccountFacadeREST extends AbstractFacade<UserAccount>
     
     //Paths our API uses.
     @GET
-    @Path("GetMusicHistory/{UserID}")
+    @Path("GetMusicHistory/{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
-    public String GetMusicHistory(@PathParam("UserID") String UserID)
+    public String GetMusicHistory(@PathParam("UserID") String UserID,
+            @PathParam("UserPassword") String UserPassword)
     {
-        String[] Parameters = new String[1];
+        String[] Parameters = new String[2];
         Parameters[0] = UserID;
+        Parameters[1] = UserPassword;
+        ServerInterface.RemoveDashFromString(Parameters[0]);
+        ServerInterface.RemoveDashFromString(Parameters[1]);
         
         return ServerInterface.ConnectToServer("GetMusicHistory", Parameters);
     }
     
     @GET
-    @Path("GetUserDetailsRegistration/{UserID}")
+    @Path("GetUserDetailsRegistration/{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
-    public String GetUserDetailsRegistration(@PathParam("UserID") String UserID)
+    public String GetUserDetailsRegistration(@PathParam("UserID") String UserID,
+            @PathParam("UserPassword") String UserPassword)
     {
-        String[] Parameters = new String[1];
+        String[] Parameters = new String[2];
         Parameters[0] = UserID;
+        Parameters[1] = UserPassword;
+        ServerInterface.RemoveDashFromString(Parameters[0]);
+        ServerInterface.RemoveDashFromString(Parameters[1]);
         
         return ServerInterface.ConnectToServer("GetUserDetailsRegistration",
                 Parameters);
     }
     
     @GET
-    @Path("GetUserDetails/{UserID}")
+    @Path("GetUserDetails/{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
-    public String GetUserDetails(@PathParam("UserID") String UserID)
+    public String GetUserDetails(@PathParam("UserID") String UserID,
+            @PathParam("UserPassword") String UserPassword)
     {
-        String[] Parameters = new String[1];
+        String[] Parameters = new String[2];
         Parameters[0] = UserID;
+        Parameters[1] = UserPassword;
+        ServerInterface.RemoveDashFromString(Parameters[0]);
+        ServerInterface.RemoveDashFromString(Parameters[1]);
         
         return ServerInterface.ConnectToServer("GetUserDetails", Parameters);
     }
@@ -149,12 +161,16 @@ public class UserAccountFacadeREST extends AbstractFacade<UserAccount>
     }   
     
     @GET
-    @Path("GetUserSettings/{UserID}")
+    @Path("GetUserSettings/{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
-    public String GetUserSettings(@PathParam("UserID") String UserID)
+    public String GetUserSettings(@PathParam("UserID") String UserID,
+            @PathParam("UserPassword") String UserPassword)
     {
-        String[] Parameters = new String[1];
+        String[] Parameters = new String[2];
         Parameters[0] = UserID;
+        Parameters[1] = UserPassword;
+        ServerInterface.RemoveDashFromString(Parameters[0]);
+        ServerInterface.RemoveDashFromString(Parameters[1]);
         
         return ServerInterface.ConnectToServer("GetUserSettings", Parameters);
     }
@@ -233,43 +249,49 @@ public class UserAccountFacadeREST extends AbstractFacade<UserAccount>
     }
     
     @GET
-    @Path("UpdateSettings/{UserID}/{MakeRecommendations}/{MoodFrequency}")
+    @Path("UpdateSettings/{MakeRecommendations}/{MoodFrequency}/"
+            + "{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
-    public String UpdateSettings(@PathParam("UserID") String UserID,
-            @PathParam("MakeRecommendations") String MakeRecommendations,
-            @PathParam("MoodFrequency") String MoodFrequency)
+    public String UpdateSettings(@PathParam("MakeRecommendations")
+            String MakeRecommendations,
+            @PathParam("MoodFrequency") String MoodFrequency,
+            @PathParam("UserID") String UserID,
+            @PathParam("UserPassword") String UserPassword)
     {
-        String[] Parameters = new String[3];
-        Parameters[0] = UserID;
-        Parameters[1] = MakeRecommendations;
-        Parameters[2] = MoodFrequency;
+        String[] Parameters = new String[4];
+        Parameters[0] = MakeRecommendations;
+        Parameters[1] = MoodFrequency;
+        Parameters[2] = UserID;
+        Parameters[3] = UserPassword;
         
         ServerInterface.RemoveDashFromString(Parameters[0]);
         ServerInterface.RemoveDashFromString(Parameters[1]);
         ServerInterface.RemoveDashFromString(Parameters[2]);
+        ServerInterface.RemoveDashFromString(Parameters[3]);
         
         return ServerInterface.ConnectToServer("UpdateSettings", Parameters);
     }
     
     @GET
-    @Path("UpdateNewUser/{UserID}/{FirstName}/{LastName}/{EmailAddress}/"
-            + "{DateOfBirth}/{Gender}/{UserPassword}")
+    @Path("UpdateNewUser/{FirstName}/{LastName}/{EmailAddress}/"
+            + "{DateOfBirth}/{Gender}/{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
-    public String UpdateNewUser(@PathParam("UserID") String UserID,
-            @PathParam("FirstName") String FirstName,
+    public String UpdateNewUser(@PathParam("FirstName") String FirstName,
             @PathParam("LastName") String LastName,
             @PathParam("EmailAddress") String EmailAddress,
             @PathParam("DateOfBirth") String DateOfBirth,
             @PathParam("Gender") String Gender,
+            @PathParam("UserID") String UserID,
             @PathParam("UserPassword") String UserPassword)
     {
         String[] Parameters = new String[7];
-        Parameters[0] = UserID;
-        Parameters[1] = FirstName;
-        Parameters[2] = LastName;
-        Parameters[3] = EmailAddress;
-        Parameters[4] = DateOfBirth;
-        Parameters[5] = Gender;
+        
+        Parameters[0] = FirstName;
+        Parameters[1] = LastName;
+        Parameters[2] = EmailAddress;
+        Parameters[3] = DateOfBirth;
+        Parameters[4] = Gender;
+        Parameters[5] = UserID;
         Parameters[6] = UserPassword;
         
         ServerInterface.RemoveDashFromString(Parameters[0]);
@@ -284,23 +306,25 @@ public class UserAccountFacadeREST extends AbstractFacade<UserAccount>
     }
     
     @GET
-    @Path("UpdateUser/{UserID}/{FirstName}/{LastName}/{EmailAddress}/"
-            + "{DateOfBirth}/{Gender}")
+    @Path("UpdateUser/{FirstName}/{LastName}/{EmailAddress}/"
+            + "{DateOfBirth}/{Gender}/{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
-    public String UpdateUser(@PathParam("UserID") String UserID,
-            @PathParam("FirstName") String FirstName,
+    public String UpdateUser(@PathParam("FirstName") String FirstName,
             @PathParam("LastName") String LastName,
             @PathParam("EmailAddress") String EmailAddress,
             @PathParam("DateOfBirth") String DateOfBirth,
-            @PathParam("Gender") String Gender)
+            @PathParam("Gender") String Gender,
+            @PathParam("UserID") String UserID,
+            @PathParam("UserPassword") String UserPassword)
     {
-        String[] Parameters = new String[6];
-        Parameters[0] = UserID;
-        Parameters[1] = FirstName;
-        Parameters[2] = LastName;
-        Parameters[3] = EmailAddress;
-        Parameters[4] = DateOfBirth;
-        Parameters[5] = Gender;
+        String[] Parameters = new String[7];   
+        Parameters[0] = FirstName;
+        Parameters[1] = LastName;
+        Parameters[2] = EmailAddress;
+        Parameters[3] = DateOfBirth;
+        Parameters[4] = Gender;
+        Parameters[5] = UserID;
+        Parameters[6] = UserPassword;
         
         ServerInterface.RemoveDashFromString(Parameters[0]);
         ServerInterface.RemoveDashFromString(Parameters[1]);
@@ -308,32 +332,37 @@ public class UserAccountFacadeREST extends AbstractFacade<UserAccount>
         ServerInterface.RemoveDashFromString(Parameters[3]);
         ServerInterface.RemoveDashFromString(Parameters[4]);
         ServerInterface.RemoveDashFromString(Parameters[5]);
+        ServerInterface.RemoveDashFromString(Parameters[6]);
         
         return ServerInterface.ConnectToServer("UpdateUser", Parameters);
     }
     
     @GET
-    @Path("UpdateUserSecondPage/{UserID}/{MusicQuestionOne}/{MusicQuestionTwo}/"
-            + "{MusicQuestionThree}/{MusicQuestionFour}")
+    @Path("UpdateUserSecondPage/{MusicQuestionOne}/{MusicQuestionTwo}/"
+            + "{MusicQuestionThree}/{MusicQuestionFour}/{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
-    public String UpdateUserSecondPage(@PathParam("UserID") String UserID,
-            @PathParam("MusicQuestionOne") String MusicQuestionOne,
+    public String UpdateUserSecondPage(@PathParam("MusicQuestionOne")
+            String MusicQuestionOne,
             @PathParam("MusicQuestionTwo") String MusicQuestionTwo,
             @PathParam("MusicQuestionThree") String MusicQuestionThree,
-            @PathParam("MusicQuestionFour") String MusicQuestionFour)
+            @PathParam("MusicQuestionFour") String MusicQuestionFour,
+            @PathParam("UserID") String UserID,
+            @PathParam("UserPassword") String UserPassword)
     {
-        String[] Parameters = new String[5];
-        Parameters[0] = UserID;
-        Parameters[1] = MusicQuestionOne;
-        Parameters[2] = MusicQuestionTwo;
-        Parameters[3] = MusicQuestionThree;
-        Parameters[4] = MusicQuestionFour;
+        String[] Parameters = new String[6];      
+        Parameters[0] = MusicQuestionOne;
+        Parameters[1] = MusicQuestionTwo;
+        Parameters[2] = MusicQuestionThree;
+        Parameters[3] = MusicQuestionFour;
+        Parameters[4] = UserID;
+        Parameters[5] = UserPassword;
         
         ServerInterface.RemoveDashFromString(Parameters[0]);
         ServerInterface.RemoveDashFromString(Parameters[1]);
         ServerInterface.RemoveDashFromString(Parameters[2]);
         ServerInterface.RemoveDashFromString(Parameters[3]);
         ServerInterface.RemoveDashFromString(Parameters[4]);
+        ServerInterface.RemoveDashFromString(Parameters[5]);
         
         return ServerInterface.ConnectToServer("UpdateUserSecondPage", Parameters);
     }

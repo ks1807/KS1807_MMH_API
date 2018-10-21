@@ -118,7 +118,7 @@ public class RunServerInterface
 
              ApplicationUserQueries UserQuery = new ApplicationUserQueries();
              GeneratePlayLists Playlist = new GeneratePlayLists();
-
+             
              /*Depending on which query has been called by the API, run the
              relavant function and resturn the result (if any).*/
             switch (QueryName)
@@ -127,27 +127,28 @@ public class RunServerInterface
                     Result = Playlist.TrackStarted(QueryContents[0],
                             QueryContents[1], QueryContents[2],
                             QueryContents[3], QueryContents[4],
-                            QueryContents[5], SQLStatement);                           
+                            QueryContents[5], QueryContents[6], SQLStatement);                           
                     break;
                 case "TrackEnded":
                     Result = Playlist.TrackEnded(QueryContents[0],
                             QueryContents[1], QueryContents[2],
-                            QueryContents[3], SQLStatement);
+                            QueryContents[3], QueryContents[4],
+                            QueryContents[5], SQLStatement);
                     break;
                 case "GetMoodList":
                     Result = UserQuery.GetMoodList(SQLStatement);
                     break; 
                 case "GetMusicHistory":
                     Result = UserQuery.GetMusicHistory(QueryContents[0],
-                            SQLStatement);
+                            QueryContents[1], SQLStatement);
                     break; 
                 case "GetUserDetailsRegistration":
                     Result = UserQuery.GetUserDetailsRegistration(
-                            QueryContents[0], SQLStatement);
+                            QueryContents[0], QueryContents[1], SQLStatement);
                     break;
                 case "GetUserDetails":
-                    Result = UserQuery.GetUserDetails(
-                            Integer.parseInt(QueryContents[0]), SQLStatement);
+                    Result = UserQuery.GetUserDetails(QueryContents[0],
+                            QueryContents[1], SQLStatement);
                     break;
                 case "GetUserPassword":
                     Result = UserQuery.GetUserPassword(QueryContents[0], SQLStatement);
@@ -157,7 +158,7 @@ public class RunServerInterface
                     break;
                 case "GetUserSettings":
                     Result = UserQuery.GetUserSettings(
-                            QueryContents[0], SQLStatement);
+                            QueryContents[0], QueryContents[1], SQLStatement);
                     break;
                 case "IsEmailAddressUnique":
                     Result = UserQuery.IsEmailAddressUnique(QueryContents[0],
@@ -182,16 +183,18 @@ public class RunServerInterface
                 case "UpdateUserSecondPage":
                     Result = UserQuery.UpdateUserSecondPage(QueryContents[0],
                             QueryContents[1], QueryContents[2],
-                            QueryContents[3], QueryContents[4], SQLStatement);
+                            QueryContents[3], QueryContents[4], QueryContents[5],
+                            SQLStatement);
                     break;
                 case "UpdateUser":
                         Result = UserQuery.UpdateUser(QueryContents[0], QueryContents[1],
                                 QueryContents[2], QueryContents[3], QueryContents[4],
-                                QueryContents[5], SQLStatement);
+                                QueryContents[5], QueryContents[6], SQLStatement);
                     break;
                 case "UpdateSettings":
                         Result = UserQuery.UpdateSettings(QueryContents[0],
-                                QueryContents[1], QueryContents[2], SQLStatement);
+                                QueryContents[1], QueryContents[2],
+                                QueryContents[3], SQLStatement);
                     break;
                 case "VerifyLogin":
                         Result = UserQuery.VerifyLogin(QueryContents[0],
