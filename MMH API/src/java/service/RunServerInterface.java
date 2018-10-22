@@ -184,9 +184,6 @@ public class RunServerInterface
                     Result = UserQuery.GetUserDetails(QueryContents[0],
                             QueryContents[1], SQLStatement);
                     break;
-                case "GetUserPassword":
-                    Result = UserQuery.GetUserPassword(QueryContents[0], SQLStatement);
-                    break;
                 case "GetUserID":
                     Result = UserQuery.GetUserID(QueryContents[0], SQLStatement);
                     break;

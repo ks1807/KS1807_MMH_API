@@ -149,17 +149,6 @@ public class UserAccountFacadeREST extends AbstractFacade<UserAccount>
     }
     
     @GET
-    @Path("GetUserPassword/{UserID}")
-    @Produces({ MediaType.TEXT_PLAIN })
-    public String GetUserPassword(@PathParam("UserID") String UserID)
-    {
-        String[] Parameters = new String[1];
-        Parameters[0] = UserID;
-        
-        return ServerInterface.ConnectToServer("GetUserPassword", Parameters);
-    }   
-    
-    @GET
     @Path("GetUserSettings/{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
     public String GetUserSettings(@PathParam("UserID") String UserID,

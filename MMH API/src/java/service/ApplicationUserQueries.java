@@ -234,7 +234,7 @@ public class ApplicationUserQueries
         }
     }
     
-    public String GetUserPassword(String UserID, Statement SQLStatement)
+    private String GetUserPassword(String UserID, Statement SQLStatement)
     {
         try
         {
@@ -246,7 +246,7 @@ public class ApplicationUserQueries
             
             if (rs.next())
             {
-                UserPassword = "UserPassword: " + rs.getString("UserPassword");
+                UserPassword = rs.getString("UserPassword");
             }
             return UserPassword;           
         }
@@ -551,10 +551,6 @@ public class ApplicationUserQueries
         }
 
         String StoredPassword = GetUserPassword(UserIDNumberOnly, SQLStatement);
-        
-        /*Get rid of the substring in front if we are just doing an
-        internal password comparison (not sending the password back to the App)*/
-        StoredPassword = StoredPassword.replace("UserPassword: ","");
 
         //If password is wrong, return -1 to the application.
         if (UserPassword.equals(StoredPassword))
@@ -571,10 +567,6 @@ public class ApplicationUserQueries
             Statement SQLStatement)
     {     
         String StoredPassword = GetUserPassword(UserID, SQLStatement);
-        
-        /*Get rid of the substring in front if we are just doing an
-        internal password comparison (not sending the password back to the App)*/
-        StoredPassword = StoredPassword.replace("UserPassword: ","");
 
         if (UserPassword.equals(StoredPassword))
         {
@@ -591,7 +583,6 @@ public class ApplicationUserQueries
             Statement SQLStatement)
     {
         String StoredPassword = GetUserPassword(UserID, SQLStatement);
-        StoredPassword = StoredPassword.replace("UserPassword: ","");
         
         if (StoredPassword.equals(UserPassword))
         {
