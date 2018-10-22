@@ -8,6 +8,10 @@ import java.security.MessageDigest;
 
 public class ApplicationUserQueries
 {
+    /*Note that this algorithm below is not used on the server side (it has
+    been moved to our client application). It will kept here though as it may
+    be useful for a future developer to debug problems with the password*/
+    
     /*Code for this algorithm derived from:
     https://howtodoinjava.com/security/how-to-generate-secure-password-hash-md5-sha-pbkdf2-bcrypt-examples/
     */

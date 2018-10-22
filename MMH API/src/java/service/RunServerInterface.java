@@ -13,10 +13,35 @@ public class RunServerInterface
             "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     private static final String ServerConnectionType = "jdbc:sqlserver";
     
+    //Replaces characters in the URL in accordance with the Percent Encoding Rule
+    //https://en.wikipedia.org/wiki/Percent-encoding
+    public static String URLReplace(String TheString)
+    {
+            TheString = TheString.replace("20", " ");
+            TheString = TheString.replace("%3A", ":");
+            TheString = TheString.replace("%3B", "/");
+            TheString = TheString.replace("%2F", ";");
+            TheString = TheString.replace("%40", "@");
+            TheString = TheString.replace("%2F", "/");
+            TheString = TheString.replace("%2F", "/");
+            TheString = TheString.replace("%2F", "/");
+            TheString = TheString.replace("%3C", "<");
+            TheString = TheString.replace("%3E", ">");
+            TheString = TheString.replace("%3D", "=");
+            TheString = TheString.replace("%26", "&");
+            TheString = TheString.replace("%25", "%");
+            TheString = TheString.replace("%24", "$");
+            TheString = TheString.replace("%23", "#");
+            TheString = TheString.replace("%2B", "+");
+            TheString = TheString.replace("%2C", ",");
+            TheString = TheString.replace("%3F", "?");
+            return TheString;
+    }
+    
     /*A single - in a string means that this parameter is empty. This is
     required as the GET URL cannot be empty. This function renders those
-    strings as empty*/
-    public String RemoveDashFromString(String TheString)
+    strings as empty.*/
+    public String SanitiseURL(String TheString)
     {
         if (TheString.equals("-"))
         {
@@ -24,6 +49,7 @@ public class RunServerInterface
         }
         else
         {
+            TheString = URLReplace(TheString);
             return TheString;
         }
     }
