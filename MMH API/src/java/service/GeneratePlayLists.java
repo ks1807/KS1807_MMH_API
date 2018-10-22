@@ -773,7 +773,8 @@ public class GeneratePlayLists
     }
     
     private static boolean UserEnterMoodAfter(int MoodID, String AfterMood,
-            String UserLiked, String DiaryEntryText, Statement SQLStatement)
+            String UserLiked, String DiaryEntryOne,
+            String DiaryEntryTwo, String DiaryEntryThree, Statement SQLStatement)
     {
         try
         {
@@ -842,17 +843,20 @@ public class GeneratePlayLists
                 
                 SQLStatement.execute(SQLQuery);
 
-                //Only make a diary entry if the user has entered text.
-                if (!DiaryEntryText.equals(""))
+                /*Only make a diary entry if the user has entered text in at
+                    least one question.*/
+                if (!DiaryEntryOne.equals("") || !DiaryEntryTwo.equals("") ||
+                        !DiaryEntryThree.equals(""))
                 {
                     //Get the time the user made the diary entry.
                     CurrentDate = new Date();          
                     String DiaryEntryTime = SQLDateFormat.format(CurrentDate);
 
                     SQLQuery = "INSERT INTO UserDiary (UserID, DiaryEntryDate, "
-                            + "DiaryEntryText)\n" +
+                            + "DiaryEntryOne, DiaryEntryTwo, DiaryEntryThree)\n" +
                             "VALUES('" + UserID + "', '" + DiaryEntryTime +
-                            "', '" + DiaryEntryText +"')";
+                            "', '" + DiaryEntryOne +"', '" + DiaryEntryTwo + "', '"
+                            + DiaryEntryThree + "')";
                     
                     SQLStatement.execute(SQLQuery);
                 }
@@ -891,8 +895,9 @@ public class GeneratePlayLists
     }
     
     public static String TrackEnded(String MoodID, String AfterMood,
-            String UserLiked, String DiaryEntryText, String UserID,
-            String UserPassword, Statement SQLStatement)
+            String UserLiked, String DiaryEntryOne, String DiaryEntryTwo,
+            String DiaryEntryThree, String UserID, String UserPassword,
+            Statement SQLStatement)
     {
         ApplicationUserQueries User = new ApplicationUserQueries();
         
@@ -905,8 +910,8 @@ public class GeneratePlayLists
         int MoodIDNum = Integer.parseInt(MoodID);
         if (MoodIDNum > 0)
         {
-            UserEnterMoodAfter(MoodIDNum, AfterMood, UserLiked, DiaryEntryText,
-                    SQLStatement);
+            UserEnterMoodAfter(MoodIDNum, AfterMood, UserLiked, DiaryEntryOne,
+                    DiaryEntryTwo, DiaryEntryThree, SQLStatement);
             return "TrackEnded: " + Integer.toString(MoodIDNum);
         }
         else

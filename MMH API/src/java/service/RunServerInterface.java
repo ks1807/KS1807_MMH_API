@@ -140,7 +140,8 @@ public class RunServerInterface
                     Result = Playlist.TrackEnded(QueryContents[0],
                             QueryContents[1], QueryContents[2],
                             QueryContents[3], QueryContents[4],
-                            QueryContents[5], SQLStatement);
+                            QueryContents[5], QueryContents[6],
+                            QueryContents[7], SQLStatement);
                     break;
                 case "GetMoodList":
                     Result = UserQuery.GetMoodList(SQLStatement);
@@ -179,7 +180,8 @@ public class RunServerInterface
                     break;   
                 case "UpdatePassword":
                         Result = UserQuery.UpdatePassword(QueryContents[0],
-                                QueryContents[1], SQLStatement);
+                                QueryContents[1], QueryContents[2],
+                                SQLStatement);
                     break;
                 case "UpdateNewUser":
                     Result = UserQuery.UpdateNewUser(QueryContents[0],

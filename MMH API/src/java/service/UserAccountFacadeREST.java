@@ -232,17 +232,20 @@ public class UserAccountFacadeREST extends AbstractFacade<UserAccount>
     }
     
     @GET
-    @Path("UpdatePassword%2F{UserID}%2F{UserPassword}")
+    @Path("UpdatePassword%2F{NewPassword}%2F{UserID}%2F{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
-    public String UpdatePassword(@PathParam("UserID") String UserID,
+    public String UpdatePassword(@PathParam("NewPassword") String NewPassword,
+            @PathParam("UserID") String UserID,
             @PathParam("UserPassword") String UserPassword)
     {
-        String[] Parameters = new String[2];
-        Parameters[0] = UserID;
-        Parameters[1] = UserPassword;
+        String[] Parameters = new String[3];
+        Parameters[0] = NewPassword;
+        Parameters[1] = UserID;
+        Parameters[2] = UserPassword;
         
         Parameters[0] = ServerInterface.RemoveDashFromString(Parameters[0]);
         Parameters[1] = ServerInterface.RemoveDashFromString(Parameters[1]);
+        Parameters[2] = ServerInterface.RemoveDashFromString(Parameters[2]);
         
         return ServerInterface.ConnectToServer("UpdatePassword", Parameters);
     }

@@ -123,23 +123,27 @@ public class MusicTrackFacadeREST extends AbstractFacade<MusicTrack>
     }
     
     @GET
-    @Path("TrackEnded%2F{MoodID}%2F{AfterMood}%2F{UserLiked}%2F{DiaryEntryText}%2F"
-            + "{UserID}%2F{UserPassword}")
+    @Path("TrackEnded%2F{MoodID}%2F{AfterMood}%2F{UserLiked}%2F{DiaryEntryOne}%2F"
+            + "{DiaryEntryTwo}%2F{DiaryEntryThree}%2F{UserID}%2F{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
     public String TrackEnded(@PathParam("MoodID") String MoodID,
             @PathParam("AfterMood") String AfterMood,
             @PathParam("UserLiked") String UserLiked,
-            @PathParam("DiaryEntryText") String DiaryEntryText,
+            @PathParam("DiaryEntryOne") String DiaryEntryOne,
+            @PathParam("DiaryEntryTwo") String DiaryEntryTwo,
+            @PathParam("DiaryEntryThree") String DiaryEntryThree,
             @PathParam("UserID") String UserID,
             @PathParam("UserPassword") String UserPassword)
     {
-        String[] Parameters = new String[6];
+        String[] Parameters = new String[8];
         Parameters[0] = MoodID;
         Parameters[1] = AfterMood;
         Parameters[2] = UserLiked;
-        Parameters[3] = DiaryEntryText;
-        Parameters[4] = UserID;
-        Parameters[5] = UserPassword;
+        Parameters[3] = DiaryEntryOne;
+        Parameters[4] = DiaryEntryTwo;
+        Parameters[5] = DiaryEntryThree;
+        Parameters[6] = UserID;
+        Parameters[7] = UserPassword;
         
         Parameters[0] = ServerInterface.RemoveDashFromString(Parameters[0]);
         Parameters[1] = ServerInterface.RemoveDashFromString(Parameters[1]);
@@ -147,6 +151,8 @@ public class MusicTrackFacadeREST extends AbstractFacade<MusicTrack>
         Parameters[3] = ServerInterface.RemoveDashFromString(Parameters[3]);
         Parameters[4] = ServerInterface.RemoveDashFromString(Parameters[4]);
         Parameters[5] = ServerInterface.RemoveDashFromString(Parameters[5]);
+        Parameters[6] = ServerInterface.RemoveDashFromString(Parameters[6]);
+        Parameters[7] = ServerInterface.RemoveDashFromString(Parameters[7]);
         
         return ServerInterface.ConnectToServer("TrackEnded", Parameters);
     }

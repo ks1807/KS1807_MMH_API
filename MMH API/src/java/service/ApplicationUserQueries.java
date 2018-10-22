@@ -212,21 +212,21 @@ public class ApplicationUserQueries
                 UserIDString = rs.getString("UserID");
                 if (!UserIDString.equals(""))
                 {
-                    return "UserID: " + UserIDString;
+                    return UserIDString;
                 }
                 else
                 {
-                    return "UserID: -1";
+                    return "-1";
                 }
             }
-            return "UserID: -1";
+            return "-1";
         }
         catch (SQLException err)
         {
             System.err.println("Error executing query");
             err.printStackTrace(System.err);
             System.exit(0);
-            return "UserID: -1";
+            return "-1";
         }
     }
     
@@ -375,9 +375,9 @@ public class ApplicationUserQueries
                 if(!InsertNewSettings(UserID, SQLStatement))
                 {
                     //Return -1 if it failed.
-                    UserID = "InsertNewUser: -1";
+                    UserID = "-1";
                 }
-                return "InsertNewUser: " + UserID;
+                return UserID;
         }
         catch (SQLException err)
         {
@@ -415,13 +415,19 @@ public class ApplicationUserQueries
         return "";
     }
     
-    public String UpdatePassword(String UserID, String UserPassword, Statement
-            SQLStatement)
-    {   
+    public String UpdatePassword(String NewPassword, String UserID,
+            String UserPassword, Statement SQLStatement)
+    {
+        if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
+        {
+            return "UpdatePassword: Incorrect UserID or Password."
+                    + " Query not executed.";
+        }
+        
         try
         {
             String SQLQuery = "UPDATE UserAccount SET UserPassword ='" +
-                    UserPassword + "' WHERE UserID = '" + UserID + "'";
+                    NewPassword + "' WHERE UserID = '" + UserID + "'";
                 SQLStatement.execute(SQLQuery);
             return "UpdatePassword: Successful";
         }
