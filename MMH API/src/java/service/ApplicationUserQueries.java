@@ -270,8 +270,9 @@ public class ApplicationUserQueries
         
         try
         {
-            String SQLQuery = "SELECT MakeRecommendations, MoodFrequency "
-                    + "FROM UserSettings WHERE UserID = '" + UserID + "'";
+            String SQLQuery = "SELECT MakeRecommendations, MoodFrequency,"
+                    + "RememberLogin FROM UserSettings WHERE UserID = '"
+                    + UserID + "'";
             ResultSet rs = SQLStatement.executeQuery(SQLQuery);
 
             String UserSettings = "GetUserSettings:\n";
@@ -281,7 +282,9 @@ public class ApplicationUserQueries
                 UserSettings = UserSettings + "MakeRecommendations: " +
                         rs.getString("MakeRecommendations") + "\n";
                 UserSettings = UserSettings + "MoodFrequency: " +
-                        rs.getString("MoodFrequency");
+                        rs.getString("MoodFrequency") + "\n";
+                UserSettings = UserSettings + "RememberLogin: " +
+                        rs.getString("RememberLogin");
             }
             return UserSettings;           
         }
@@ -509,8 +512,8 @@ public class ApplicationUserQueries
     }
     
     public String UpdateSettings (String MakeRecommendations,
-            String MoodFrequency, String UserID, String UserPassword,
-            Statement SQLStatement)
+            String MoodFrequency, String RememberLogin, String UserID,
+            String UserPassword, Statement SQLStatement)
     {
         if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
         {
@@ -522,7 +525,7 @@ public class ApplicationUserQueries
         {
             String SQLQuery = "UPDATE UserSettings SET MakeRecommendations ='"
                     + MakeRecommendations + "', MoodFrequency = '" +
-                    MoodFrequency + "' "
+                    MoodFrequency + "' , RememberLogin = '" + RememberLogin + "' "
                     + "WHERE UserID = '" + UserID + "'";
                 SQLStatement.execute(SQLQuery); 
                 return "UpdateSettings: Successful";

@@ -240,24 +240,27 @@ public class UserAccountFacadeREST extends AbstractFacade<UserAccount>
     }
     
     @GET
-    @Path("UpdateSettings/{MakeRecommendations}/{MoodFrequency}/"
+    @Path("UpdateSettings/{MakeRecommendations}/{MoodFrequency}/{RememberLogin}/"
             + "{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
     public String UpdateSettings(@PathParam("MakeRecommendations")
             String MakeRecommendations,
             @PathParam("MoodFrequency") String MoodFrequency,
+            @PathParam("RememberLogin") String RememberLogin,
             @PathParam("UserID") String UserID,
             @PathParam("UserPassword") String UserPassword)
     {
-        String[] Parameters = new String[4];
+        String[] Parameters = new String[5];
         Parameters[0] = MakeRecommendations;
         Parameters[1] = MoodFrequency;
-        Parameters[2] = UserID;
-        Parameters[3] = UserPassword;
+        Parameters[2] = RememberLogin;
+        Parameters[3] = UserID;
+        Parameters[4] = UserPassword;
         
         Parameters[0] = ServerInterface.SanitiseURL(Parameters[0]);
         Parameters[1] = ServerInterface.SanitiseURL(Parameters[1]);
         Parameters[2] = ServerInterface.SanitiseURL(Parameters[2]);
+        Parameters[3] = ServerInterface.SanitiseURL(Parameters[3]);
         Parameters[3] = ServerInterface.SanitiseURL(Parameters[3]);
         
         return ServerInterface.ConnectToServer("UpdateSettings", Parameters);

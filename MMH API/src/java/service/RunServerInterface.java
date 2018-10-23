@@ -226,7 +226,8 @@ public class RunServerInterface
                 case "UpdateSettings":
                         Result = UserQuery.UpdateSettings(QueryContents[0],
                                 QueryContents[1], QueryContents[2],
-                                QueryContents[3], SQLStatement);
+                                QueryContents[3], QueryContents[4],
+                                SQLStatement);
                     break;
                 case "VerifyLogin":
                         Result = UserQuery.VerifyLogin(QueryContents[0],
