@@ -155,7 +155,11 @@ public class RunServerInterface
              /*Depending on which query has been called by the API, run the
              relavant function and resturn the result (if any).*/
             switch (QueryName)
-            {           
+            {
+                case "CheckMoodEntry":
+                    Result = Playlist.CheckMoodEntry(QueryContents[0],
+                            QueryContents[1], SQLStatement);
+                    break; 
                 case "TrackStarted":
                     Result = Playlist.TrackStarted(QueryContents[0],
                             QueryContents[1], QueryContents[2],

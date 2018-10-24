@@ -90,6 +90,21 @@ public class MusicTrackFacadeREST extends AbstractFacade<MusicTrack>
     
     //Paths our API uses.
     @GET
+    @Path("CheckMoodEntry/{UserID}/{UserPassword}")
+    @Produces({ MediaType.TEXT_PLAIN })
+    public String CheckMoodEntry(@PathParam("UserID") String UserID,
+            @PathParam("UserPassword") String UserPassword)
+    {
+        String[] Parameters = new String[2];
+        Parameters[0] = UserID;
+        Parameters[1] = UserPassword;
+        
+        Parameters[0] = ServerInterface.SanitiseURL(Parameters[0]);
+        Parameters[1] = ServerInterface.SanitiseURL(Parameters[1]);
+        return ServerInterface.ConnectToServer("CheckMoodEntry", Parameters);
+    }
+    
+    @GET
     @Path("GetRecommendedTracksUser/{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
     public String GetRecommendedTracksUser(@PathParam("UserID") String UserID,

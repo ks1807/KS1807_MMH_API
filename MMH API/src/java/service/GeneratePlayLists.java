@@ -52,7 +52,6 @@ public class GeneratePlayLists
         {
             System.err.println("Error executing query");
             err.printStackTrace(System.err);
-            System.exit(0);
             return -1;
         }
     }
@@ -166,14 +165,26 @@ public class GeneratePlayLists
         }
     }
     
-    private static boolean CheckMoodEntry(String UserID, Statement SQLStatement)
+    //Checks to see if the user should be prompted to enter their mood.
+    public static String CheckMoodEntry(String UserID, String UserPassword,
+            Statement SQLStatement)
     {
+        String QueryName = "CheckMoodEntry";
+        
+        ApplicationUserQueries User = new ApplicationUserQueries();
+        
+        if (!User.AuthenticateUser(UserID, UserPassword, SQLStatement))
+        {
+            return QueryName + ": Incorrect UserID or Password."
+                    + " Query not executed.";
+        }
+        
         try
         {
-            /*Get the MoodFrequency (String) parameter from the UserSettings
-            database table.*/
-            String SQLQuery = "SELECT MoodFrequency FROM UserSettings WHERE UserID = "
-                    + "'" + UserID + "'";
+            /*Get the MoodFrequency parameter from the UserSettings database
+            table.*/
+            String SQLQuery = "SELECT MoodFrequency FROM UserSettings "
+                    + "WHERE UserID = '" + UserID + "'";
 
             ResultSet rs = SQLStatement.executeQuery(SQLQuery);
             
@@ -208,52 +219,51 @@ public class GeneratePlayLists
                 switch(MoodFrequency)
                 {
                     case "ONCE PER TRACK" :
-                        return true;
+                        return QueryName + ": Yes";
                     case "ONCE EVERY 15 MINUTES":
                         if (MinutesDifference > 15)
                         {
-                            return true;
+                            return QueryName + ": Yes";
                         }
                         else
                         {
-                            return false;
+                            return QueryName + ": No";
                         }
                     case "ONCE PER HOUR":
                         if (MinutesDifference > 60)
                         {
-                            return true;
+                            return QueryName + ": Yes";
                         }
                         else
                         {
-                            return false;
+                            return QueryName + ": No";
                         }
                     case "ONCE PER 24 HOURS":
                         //1440 - Number of Minutes in a day
                         if (MinutesDifference > 1440)
                         {
-                            return true;
+                            return QueryName + ": Yes";
                         }
                         else
                         {
-                            return false;
+                            return QueryName + ": No";
                         }
                     case "NEVER" :
-                        return false;
+                        return QueryName + ": No";
                     default :
-                        return false;
+                        return QueryName + ": No";
                 }
             } catch (ParseException e)
             {
                 e.printStackTrace();
-                return false;
+                 return QueryName + ": Database Error";
             }
         }
         catch (SQLException err)
         {
             System.err.println("Error executing query");
             err.printStackTrace(System.err);
-            System.exit(0);
-            return false;
+            return QueryName + ": Database Error";
         }
     }
     
@@ -441,12 +451,11 @@ public class GeneratePlayLists
         {
             System.err.println("Error executing query");
             err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "GetRecommendedTracksUser: Database Error";
         }
     }
     
-        /*Gets the latest recommended track, that is the tracks that
+    /*Gets the latest recommended track, that is the tracks that
     have been specifically recommended based on all users.*/
     public static String GetRecommendedTracksSystem(String UserID, String
             UserPassword, Statement SQLStatement)
@@ -498,8 +507,7 @@ public class GeneratePlayLists
         {
             System.err.println("Error executing query");
             err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "GetRecommendedTracksSystem: Database Error";
         }
     }
 
@@ -828,7 +836,6 @@ public class GeneratePlayLists
         {
             System.err.println("Error executing query");
             err.printStackTrace(System.err);
-            System.exit(0);
             return -1;
         }
     }
@@ -838,39 +845,32 @@ public class GeneratePlayLists
     {
         try
         {
-            if (CheckMoodEntry(UserID, SQLStatement))
-            {            
-                //Get the current Date/Time and format it for SQL Server.
-                Date CurrentDate = new Date();          
-                SimpleDateFormat SQLDateFormat =
-                        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                String MoodBeforeTime = SQLDateFormat.format(CurrentDate);
+            //Get the current Date/Time and format it for SQL Server.
+            Date CurrentDate = new Date();          
+            SimpleDateFormat SQLDateFormat =
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String MoodBeforeTime = SQLDateFormat.format(CurrentDate);
 
-                if (!BeforeMood.equals(""))
+            if (!BeforeMood.equals(""))
+            {
+                /*System gets current Date/Time, BeforeMood, UserID and
+                Track ID and adds these to UserMood database table.
+                Get the newly inserted MoodID as well.*/
+                    String SQLQuery = "SET NOCOUNT ON;"
+                            + "INSERT INTO UserMood (UserID, TrackID, MoodBefore," +
+                            "MoodBeforeTime)\n" +
+                            "VALUES('" + UserID + "', '" + TrackID + "', '" +
+                            BeforeMood + "', '" + MoodBeforeTime + "')\n;" +
+                            "SELECT SCOPE_IDENTITY() AS MoodID";
+
+                ResultSet rs = SQLStatement.executeQuery(SQLQuery);
+
+                String MoodID = "-1";
+                if (rs.next())
                 {
-                    /*System gets current Date/Time, BeforeMood, UserID and
-                    Track ID and adds these to UserMood database table.
-                    Get the newly inserted MoodID as well.*/
-                        String SQLQuery = "SET NOCOUNT ON;"
-                                + "INSERT INTO UserMood (UserID, TrackID, MoodBefore," +
-                                "MoodBeforeTime)\n" +
-                                "VALUES('" + UserID + "', '" + TrackID + "', '" +
-                                BeforeMood + "', '" + MoodBeforeTime + "')\n;" +
-                                "SELECT SCOPE_IDENTITY() AS MoodID";
-
-                    ResultSet rs = SQLStatement.executeQuery(SQLQuery);
-
-                    String MoodID = "-1";
-                    if (rs.next())
-                    {
-                        MoodID = "TrackStarted: MoodID: " + rs.getString("MoodID");
-                    } 
-                    return MoodID;
-                }
-                else
-                {
-                    return "TrackStarted: MoodID: -1";
-                }
+                    MoodID = "TrackStarted: MoodID: " + rs.getString("MoodID");
+                } 
+                return MoodID;
             }
             else
             {
@@ -881,8 +881,7 @@ public class GeneratePlayLists
         {
             System.err.println("Error executing query");
             err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "UserEnterMoodBefore: Database Error";
         }
     }
     
@@ -908,7 +907,7 @@ public class GeneratePlayLists
             //Get the current Date/Time and format it for SQL Server.
             Date CurrentDate = new Date();          
             SimpleDateFormat SQLDateFormat =
-                    new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String MoodAfterTime = SQLDateFormat.format(CurrentDate);
 
             if (!AfterMood.equals(""))
@@ -985,7 +984,6 @@ public class GeneratePlayLists
         {
             System.err.println("Error executing query");
             err.printStackTrace(System.err);
-            System.exit(0);
             return false;
         }
     }
