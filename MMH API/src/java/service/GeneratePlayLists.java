@@ -388,6 +388,120 @@ public class GeneratePlayLists
             return TrackIDs;
         }
     }
+    
+    /*Gets the latest recommended track for the user, that is the tracks that
+    have been specifically recommended for that user.*/
+    public static String GetRecommendedTracksUser(String UserID, String
+            UserPassword, Statement SQLStatement)
+    {
+        ApplicationUserQueries User = new ApplicationUserQueries();
+        
+        if (!User.AuthenticateUser(UserID, UserPassword, SQLStatement))
+        {
+            return "GetRecommendedTracksUser: Incorrect UserID or Password."
+                    + " Query not executed.";
+        }
+        
+        try
+        {
+            String PlayListName = "Music To Make You Feel Better";
+            /*Gets the latest recommended music track playlist. Latest is
+            determined by the Playlist with the highest PlayList ID for that
+            specfic UserID.
+            Note the complex joining of MusicTrack, Playlist and TracksInPlaylist
+            that are required to bring back the correct track names.*/
+            String SQLQuery = "SELECT DISTINCT TOP (10) TrackName, Genre, "
+                    + "Artist, Length, PlayListName,"
+                    + "MusicTrack.TrackID, PlayList.PlayListID, "
+                    + "TracksInPlayList.UserID " +
+                    "FROM MusicTrack " +
+                    "INNER JOIN TracksInPlayList ON " +
+                    "MusicTrack.TrackID = TracksInPlayList.TrackID " +
+                    "INNER JOIN Playlist ON " +
+                    "MusicTrack.TrackID = TracksInPlayList.TrackID AND "
+                    + "Playlist.PlayListID = TracksInPlayList.PlayListID AND " +
+                    "Playlist.UserID = TracksInPlayList.UserID " +
+                    "WHERE TracksInPlayList.UserID = '" + UserID + "'" +
+                    "AND PlayListName = '" + PlayListName + "' " +
+                    "ORDER BY PlayList.PlayListID DESC";
+            ResultSet rs = SQLStatement.executeQuery(SQLQuery);
+
+            String MusicResults = "GetRecommendedTracksUser:\n" +
+                    "PlayListName: " + PlayListName + "\n";    
+            while (rs.next())
+            {
+                MusicResults = MusicResults + rs.getString("TrackName") + ",";
+                MusicResults = MusicResults + rs.getString("Genre") + ",";
+                MusicResults = MusicResults + rs.getString("Artist") + ",";
+                MusicResults = MusicResults + rs.getString("Length") + "\n";              
+            }
+            return MusicResults;           
+        }
+        catch (SQLException err)
+        {
+            System.err.println("Error executing query");
+            err.printStackTrace(System.err);
+            System.exit(0);
+            return "";
+        }
+    }
+    
+        /*Gets the latest recommended track, that is the tracks that
+    have been specifically recommended based on all users.*/
+    public static String GetRecommendedTracksSystem(String UserID, String
+            UserPassword, Statement SQLStatement)
+    {
+        ApplicationUserQueries User = new ApplicationUserQueries();
+        
+        if (!User.AuthenticateUser(UserID, UserPassword, SQLStatement))
+        {
+            return "GetRecommendedTracksSystem: Incorrect UserID or Password."
+                    + " Query not executed.";
+        }
+        
+        try
+        {
+            String PlayListName = "Music that others are listening to";
+            /*Gets the latest recommended music track playlist. Latest is
+            determined by the Playlist with the highest PlayList ID for that
+            specfic UserID.
+            Note the complex joining of MusicTrack, Playlist and TracksInPlaylist
+            that are required to bring back the correct track names.*/
+            String SQLQuery = "SELECT DISTINCT TOP (10) TrackName, Genre, "
+                    + "Artist, Length, PlayListName,"
+                    + "MusicTrack.TrackID, PlayList.PlayListID, "
+                    + "TracksInPlayList.UserID " +
+                    "FROM MusicTrack " +
+                    "INNER JOIN TracksInPlayList ON " +
+                    "MusicTrack.TrackID = TracksInPlayList.TrackID " +
+                    "INNER JOIN Playlist ON " +
+                    "MusicTrack.TrackID = TracksInPlayList.TrackID AND "
+                    + "Playlist.PlayListID = TracksInPlayList.PlayListID AND " +
+                    "Playlist.UserID = TracksInPlayList.UserID " +
+                    "WHERE TracksInPlayList.UserID = '" + UserID + "'" +
+                    "AND PlayListName = '" + PlayListName + "' " +
+                    "ORDER BY PlayList.PlayListID DESC";
+            ResultSet rs = SQLStatement.executeQuery(SQLQuery);
+
+            String MusicResults = "GetRecommendedTracksSystem:\n" +
+                    "PlayListName: " + PlayListName + "\n";    
+            while (rs.next())
+            {
+                MusicResults = MusicResults + rs.getString("TrackName") + ",";
+                MusicResults = MusicResults + rs.getString("Genre") + ",";
+                MusicResults = MusicResults + rs.getString("Artist") + ",";
+                MusicResults = MusicResults + rs.getString("Length") + "\n";              
+            }
+            return MusicResults;           
+        }
+        catch (SQLException err)
+        {
+            System.err.println("Error executing query");
+            err.printStackTrace(System.err);
+            System.exit(0);
+            return "";
+        }
+    }
 
     private static int[] MakeRecommendationUsers(Statement SQLStatement)
     {

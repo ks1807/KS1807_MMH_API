@@ -176,6 +176,14 @@ public class RunServerInterface
                     Result = UserQuery.GetMusicHistory(QueryContents[0],
                             QueryContents[1], SQLStatement);
                     break; 
+                case "GetRecommendedTracksUser":
+                    Result = Playlist.GetRecommendedTracksUser(QueryContents[0],
+                            QueryContents[1], SQLStatement);
+                    break;
+                case "GetRecommendedTracksSystem":
+                    Result = Playlist.GetRecommendedTracksSystem(QueryContents[0],
+                            QueryContents[1], SQLStatement);
+                    break; 
                 case "GetUserDetailsRegistration":
                     Result = UserQuery.GetUserDetailsRegistration(
                             QueryContents[0], QueryContents[1], SQLStatement);
