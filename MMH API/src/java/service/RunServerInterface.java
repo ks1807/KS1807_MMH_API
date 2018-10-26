@@ -211,7 +211,7 @@ public class RunServerInterface
                     Result = UserQuery.InsertNewUser(QueryContents[0],
                             QueryContents[1], QueryContents[2],
                             QueryContents[3], QueryContents[4],
-                            QueryContents[5], SQLStatement);
+                            QueryContents[5], QueryContents[6], SQLStatement);
                     break;   
                 case "UpdatePassword":
                         Result = UserQuery.UpdatePassword(QueryContents[0],
@@ -222,7 +222,7 @@ public class RunServerInterface
                     Result = UserQuery.UpdateNewUser(QueryContents[0],
                             QueryContents[1], QueryContents[2], QueryContents[3],
                             QueryContents[4], QueryContents[5], QueryContents[6],
-                            SQLStatement);
+                            QueryContents[7], SQLStatement);
                     break;
                 case "UpdateUserSecondPage":
                     Result = UserQuery.UpdateUserSecondPage(QueryContents[0],

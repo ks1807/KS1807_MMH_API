@@ -165,7 +165,7 @@ public class UserAccountFacadeREST extends AbstractFacade<UserAccount>
     
     @GET
     @Path("InsertNewUser/{FirstName}/{LastName}/{EmailAddress}/"
-            + "{DateOfBirth}/{Gender}/{UserPassword}")
+            + "{DateOfBirth}/{Gender}/{AcceptedEthicsStatement}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
     public String InsertNewUser(@PathParam("UserID") String UserID,
             @PathParam("FirstName") String FirstName,
@@ -173,15 +173,17 @@ public class UserAccountFacadeREST extends AbstractFacade<UserAccount>
             @PathParam("EmailAddress") String EmailAddress,
             @PathParam("DateOfBirth") String DateOfBirth,
             @PathParam("Gender") String Gender,
+            @PathParam("AcceptedEthicsStatement") String AcceptedEthicsStatement,
             @PathParam("UserPassword") String UserPassword)
     {
-        String[] Parameters = new String[6];
+        String[] Parameters = new String[7];
         Parameters[0] = FirstName;
         Parameters[1] = LastName;
         Parameters[2] = EmailAddress;
         Parameters[3] = DateOfBirth;
         Parameters[4] = Gender;
-        Parameters[5] = UserPassword;
+        Parameters[5] = AcceptedEthicsStatement;
+        Parameters[6] = UserPassword;
         
         Parameters[0] = ServerInterface.SanitiseURL(Parameters[0]);
         Parameters[1] = ServerInterface.SanitiseURL(Parameters[1]);
@@ -189,6 +191,7 @@ public class UserAccountFacadeREST extends AbstractFacade<UserAccount>
         Parameters[3] = ServerInterface.SanitiseURL(Parameters[3]);
         Parameters[4] = ServerInterface.SanitiseURL(Parameters[4]);
         Parameters[5] =  ServerInterface.SanitiseURL(Parameters[5]);
+        Parameters[6] =  ServerInterface.SanitiseURL(Parameters[6]);
         
         return ServerInterface.ConnectToServer("InsertNewUser", Parameters);
     }
@@ -268,7 +271,7 @@ public class UserAccountFacadeREST extends AbstractFacade<UserAccount>
     
     @GET
     @Path("UpdateNewUser/{FirstName}/{LastName}/{EmailAddress}/"
-            + "{DateOfBirth}/{Gender}/{UserID}/{UserPassword}")
+            + "{DateOfBirth}/{Gender}/{AcceptedEthicsStatement}/{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
     public String UpdateNewUser(@PathParam("FirstName") String FirstName,
             @PathParam("LastName") String LastName,
@@ -276,17 +279,19 @@ public class UserAccountFacadeREST extends AbstractFacade<UserAccount>
             @PathParam("DateOfBirth") String DateOfBirth,
             @PathParam("Gender") String Gender,
             @PathParam("UserID") String UserID,
+            @PathParam("AcceptedEthicsStatement") String AcceptedEthicsStatement,
             @PathParam("UserPassword") String UserPassword)
     {
-        String[] Parameters = new String[7];
+        String[] Parameters = new String[8];
         
         Parameters[0] = FirstName;
         Parameters[1] = LastName;
         Parameters[2] = EmailAddress;
         Parameters[3] = DateOfBirth;
         Parameters[4] = Gender;
-        Parameters[5] = UserID;
-        Parameters[6] = UserPassword;
+        Parameters[5] = AcceptedEthicsStatement;
+        Parameters[6] = UserID;
+        Parameters[7] = UserPassword;
         
         Parameters[0] = ServerInterface.SanitiseURL(Parameters[0]);
         Parameters[1] = ServerInterface.SanitiseURL(Parameters[1]);
@@ -295,6 +300,7 @@ public class UserAccountFacadeREST extends AbstractFacade<UserAccount>
         Parameters[4] = ServerInterface.SanitiseURL(Parameters[4]);
         Parameters[5] = ServerInterface.SanitiseURL(Parameters[5]);
         Parameters[6] = ServerInterface.SanitiseURL(Parameters[6]);
+        Parameters[7] = ServerInterface.SanitiseURL(Parameters[7]);
         
         return ServerInterface.ConnectToServer("UpdateNewUser", Parameters);
     }

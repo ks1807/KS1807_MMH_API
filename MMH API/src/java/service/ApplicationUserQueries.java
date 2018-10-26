@@ -51,7 +51,7 @@ public class ApplicationUserQueries
     {
         try
         {
-            String SQLQuery = "SELECT Mood, Score, Emoticon "
+            String SQLQuery = "SELECT Score, Emoticon, Mood "
                     + "FROM MoodScore";
             ResultSet rs = SQLStatement.executeQuery(SQLQuery);
 
@@ -59,9 +59,9 @@ public class ApplicationUserQueries
             String MoodScoreResult = "GetMoodList: ";
             while (rs.next())
             {
-                MoodScoreResult = MoodScoreResult + rs.getString("Mood") + ",";
+                MoodScoreResult = MoodScoreResult + rs.getString("Emoticon") + ",";
                 MoodScoreResult = MoodScoreResult + rs.getString("Score") + ",";
-                MoodScoreResult = MoodScoreResult + rs.getString("Emoticon") + "\n";
+                MoodScoreResult = MoodScoreResult + rs.getString("Mood") + "\n";
             }
             return MoodScoreResult;
         }
@@ -355,7 +355,8 @@ public class ApplicationUserQueries
     
     public String InsertNewUser(String FirstName, String LastName,
             String EmailAddress, String DateOfBirth, String Gender,
-            String UserPassword, Statement SQLStatement)
+            String AcceptedEthicsStatement, String UserPassword,
+            Statement SQLStatement)
     {
         try
         {
@@ -365,11 +366,11 @@ public class ApplicationUserQueries
             EmailAddress = EmailAddress.toLowerCase();
 
             String SQLQuery = "SET NOCOUNT ON; INSERT INTO UserAccount (FirstName,"
-                                + "LastName, DateOfBirth, Gender, EmailAddress,"
-                                + "UserPassword)\n" +
+                                + "LastName, DateOfBirth, Gender, EmailAddress, "
+                    + "AcceptedEthicsStatement, UserPassword)\n" +
                         "VALUES('" + FirstName + "','" + LastName + "','" +
                     DateOfBirth + "','" + Gender + "','" + EmailAddress + "','"
-                    + UserPassword + "'" + ");"
+                    + AcceptedEthicsStatement + "', '" + UserPassword + "'" + ");"
                     + "SELECT SCOPE_IDENTITY() AS UserID";
                 ResultSet rs = SQLStatement.executeQuery(SQLQuery);
 
@@ -397,7 +398,8 @@ public class ApplicationUserQueries
     
     public String UpdateNewUser(String FirstName, String LastName,
             String EmailAddress, String DateOfBirth, String Gender, String
-                    UserID, String UserPassword, Statement SQLStatement)
+            AcceptedEthicsStatement, String UserID, String UserPassword,
+            Statement SQLStatement)
     {
         try
         {
@@ -406,8 +408,9 @@ public class ApplicationUserQueries
 
             String SQLQuery = "UPDATE UserAccount SET FirstName ='" + FirstName +
                     "', LastName = '" + LastName + "',DateOfBirth = '" +
-                    DateOfBirth + "'," + "Gender = '" + Gender + "'," +
-                    "EmailAddress = '" + EmailAddress + "'," +
+                    DateOfBirth + "'," + "Gender = '" + Gender + "', " +
+                    "EmailAddress = '" + EmailAddress + "', " +
+                    "AcceptedEthicsStatement = '" + AcceptedEthicsStatement + "', " +
                     "UserPassword = '" + UserPassword + "' "
                     + "WHERE UserID = '" + UserID + "'";
                 SQLStatement.execute(SQLQuery);
