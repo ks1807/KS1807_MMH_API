@@ -57,7 +57,7 @@ public class ApplicationUserQueries
             ResultSet rs = SQLStatement.executeQuery(SQLQuery);
 
 
-            String MoodScoreResult = "GetMoodList: ";
+            String MoodScoreResult = "";
             while (rs.next())
             {
                 MoodScoreResult = MoodScoreResult + rs.getString("Emoticon") + ",";
@@ -81,8 +81,7 @@ public class ApplicationUserQueries
     {
         if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
         {
-            return "GetMusicHistory: Incorrect UserID or Password."
-                    + " Query not executed.";
+            return "Incorrect UserID or Password. Query not executed.";
         }
         
         try
@@ -99,7 +98,7 @@ public class ApplicationUserQueries
                     " ORDER BY UserMood.MoodAfterTime DESC";
             ResultSet rs = SQLStatement.executeQuery(SQLQuery);
 
-            String MusicResults = "GetMusicHistory:\n";    
+            String MusicResults = "";    
             while (rs.next())
             {
                 MusicResults = MusicResults + rs.getString("TrackName") + ",";
@@ -123,8 +122,7 @@ public class ApplicationUserQueries
     {
         if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
         {
-            return "GetUserDetails: Incorrect UserID or Password."
-                    + " Query not executed.";
+            return "Incorrect UserID or Password. Query not executed.";
         }
         
         try
@@ -134,7 +132,7 @@ public class ApplicationUserQueries
                     + "FROM UserAccount WHERE UserID = '" + UserID + "'";
             ResultSet rs = SQLStatement.executeQuery(SQLQuery);
 
-            String UserDetails = "GetUserDetails:\n";
+            String UserDetails = "";
             
             if (rs.next())
             {
@@ -165,8 +163,7 @@ public class ApplicationUserQueries
     {
         if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
         {
-            return "GetUserDetailsRegistration: Incorrect UserID or Password."
-                    + " Query not executed.";
+            return "Incorrect UserID or Password. Query not executed.";
         }
         
         try
@@ -176,7 +173,7 @@ public class ApplicationUserQueries
                     + "FROM UserAccount WHERE UserID = '" + UserID + "'";
             ResultSet rs = SQLStatement.executeQuery(SQLQuery);
 
-            String UserDetails = "GetUserDetailsRegistration:\n";
+            String UserDetails = "";
             
             if (rs.next())
             {
@@ -265,8 +262,7 @@ public class ApplicationUserQueries
     {
         if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
         {
-            return "GetUserSettings: Incorrect UserID or Password."
-                    + " Query not executed.";
+            return "Incorrect UserID or Password. Query not executed.";
         }
         
         try
@@ -276,7 +272,7 @@ public class ApplicationUserQueries
                     + UserID + "'";
             ResultSet rs = SQLStatement.executeQuery(SQLQuery);
 
-            String UserSettings = "GetUserSettings:\n";
+            String UserSettings = "";
             
             if (rs.next())
             {
@@ -318,11 +314,11 @@ public class ApplicationUserQueries
             }
             if (EmailCount > 0)
             {
-                return "IsEmailAddressUnique: NO";
+                return "NO";
             }
             else
             {
-                return "IsEmailAddressUnique: YES";
+                return "YES";
             }            
         }
         catch (SQLException err)
@@ -415,7 +411,7 @@ public class ApplicationUserQueries
                     "UserPassword = '" + UserPassword + "' "
                     + "WHERE UserID = '" + UserID + "'";
                 SQLStatement.execute(SQLQuery);
-                return "UpdateNewUser: Successful";
+                return "Successful";
         }
         catch (SQLException err)
         {
@@ -431,8 +427,7 @@ public class ApplicationUserQueries
     {
         if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
         {
-            return "UpdatePassword: Incorrect UserID or Password."
-                    + " Query not executed.";
+            return "Incorrect UserID or Password. Query not executed.";
         }
         
         try
@@ -440,7 +435,7 @@ public class ApplicationUserQueries
             String SQLQuery = "UPDATE UserAccount SET UserPassword ='" +
                     NewPassword + "' WHERE UserID = '" + UserID + "'";
                 SQLStatement.execute(SQLQuery);
-            return "UpdatePassword: Successful";
+            return "Successful";
         }
         catch (SQLException err)
         {
@@ -458,8 +453,7 @@ public class ApplicationUserQueries
     {     
         if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
         {
-            return "UpdateUser: Incorrect UserID or Password."
-                    + " Query not executed.";
+            return "Incorrect UserID or Password. Query not executed.";
         }
         
         try
@@ -473,7 +467,7 @@ public class ApplicationUserQueries
                     "EmailAddress = '" + EmailAddress + "' " +
                     "WHERE UserID = '" + UserID + "'";
                 SQLStatement.execute(SQLQuery);
-                return "UpdateUser: Successful";
+                return "Successful";
         }
         catch (SQLException err)
         {
@@ -491,8 +485,7 @@ public class ApplicationUserQueries
     {
         if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
         {
-            return "UpdateUserSecondPage: Incorrect UserID or Password."
-                    + " Query not executed.";
+            return "Incorrect UserID or Password. Query not executed.";
         }
         
         try
@@ -504,7 +497,7 @@ public class ApplicationUserQueries
                     + "MusicQuestionFour = '" + MusicQuestionFour + "' "
                     + "WHERE UserID = '" + UserID + "'";
                 SQLStatement.execute(SQLQuery);
-                return "UpdateUserSecondPage: Successful";
+                return "Successful";
         }
         catch (SQLException err)
         {
@@ -521,8 +514,7 @@ public class ApplicationUserQueries
     {
         if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
         {
-            return "UpdateSettings: Incorrect UserID or Password."
-                    + " Query not executed.";
+            return "Incorrect UserID or Password. Query not executed.";
         }
         
         try
@@ -532,7 +524,7 @@ public class ApplicationUserQueries
                     MoodFrequency + "' , RememberLogin = '" + RememberLogin + "' "
                     + "WHERE UserID = '" + UserID + "'";
                 SQLStatement.execute(SQLQuery); 
-                return "UpdateSettings: Successful";
+                return "Successful";
         }
         catch (SQLException err)
         {
@@ -547,17 +539,14 @@ public class ApplicationUserQueries
             Statement SQLStatement)
     {
         String UserID = GetUserID(EmailAddress, SQLStatement);
-
-        //Make sure the UserID: string is removed when running the password query.
-        String UserIDNumberOnly = UserID.replace("UserID: ","");
         
         //Don't bother checking password if the ID does not match.
-        if(UserIDNumberOnly == "-1")
+        if(UserID == "-1")
         {
             return UserID;
         }
 
-        String StoredPassword = GetUserPassword(UserIDNumberOnly, SQLStatement);
+        String StoredPassword = GetUserPassword(UserID, SQLStatement);
 
         //If password is wrong, return -1 to the application.
         if (UserPassword.equals(StoredPassword))
@@ -566,7 +555,7 @@ public class ApplicationUserQueries
         }
         else
         {
-            return "UserID: -1";
+            return "-1";
         }
     }
 
@@ -577,11 +566,11 @@ public class ApplicationUserQueries
 
         if (UserPassword.equals(StoredPassword))
         {
-            return "VerifyPassword: Correct Password";
+            return "Correct Password";
         }
         else
         {
-            return "VerifyPassword: Incorrect Password";
+            return "Incorrect Password";
         }
     }
     

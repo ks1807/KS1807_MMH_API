@@ -4,7 +4,7 @@ import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2018-10-28T18:53:11")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2018-10-29T06:47:13")
 @StaticMetamodel(MusicTrack.class)
 public class MusicTrack_ { 
 

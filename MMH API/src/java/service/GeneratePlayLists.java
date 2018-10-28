@@ -181,8 +181,7 @@ public class GeneratePlayLists
         
         if (!User.AuthenticateUser(UserID, UserPassword, SQLStatement))
         {
-            return QueryName + ": Incorrect UserID or Password."
-                    + " Query not executed.";
+            return "Incorrect UserID or Password. Query not executed.";
         }
         
         try
@@ -228,51 +227,51 @@ public class GeneratePlayLists
                 switch(MoodFrequency)
                 {
                     case "ONCE PER TRACK" :
-                        return QueryName + ": Yes";
+                        return "Yes";
                     case "ONCE EVERY 15 MINUTES":
                         if (MinutesDifference > 15)
                         {
-                            return QueryName + ": Yes";
+                            return "Yes";
                         }
                         else
                         {
-                            return QueryName + ": No";
+                            return "No";
                         }
                     case "ONCE PER HOUR":
                         if (MinutesDifference > 60)
                         {
-                            return QueryName + ": Yes";
+                            return "Yes";
                         }
                         else
                         {
-                            return QueryName + ": No";
+                            return "No";
                         }
                     case "ONCE PER 24 HOURS":
                         //1440 = Number of Minutes in a day
                         if (MinutesDifference > 1440)
                         {
-                            return QueryName + ": Yes";
+                            return "Yes";
                         }
                         else
                         {
-                            return QueryName + ": No";
+                            return "No";
                         }
                     case "NEVER" :
-                        return QueryName + ": No";
+                        return "No";
                     default :
-                        return QueryName + ": No";
+                        return "Invalid Setting";
                 }
             } catch (ParseException e)
             {
                 e.printStackTrace();
-                 return QueryName + ": Database Error";
+                return "Database Error";
             }
         }
         catch (SQLException err)
         {
             System.err.println("Error executing query");
             err.printStackTrace(System.err);
-            return QueryName + ": Database Error";
+            return "Database Error";
         }
     }
     
@@ -416,8 +415,7 @@ public class GeneratePlayLists
         
         if (!User.AuthenticateUser(UserID, UserPassword, SQLStatement))
         {
-            return "GetRecommendedTracksUser: Incorrect UserID or Password."
-                    + " Query not executed.";
+            return "Incorrect UserID or Password. Query not executed.";
         }
         
         try
@@ -444,8 +442,8 @@ public class GeneratePlayLists
                     "ORDER BY PlayList.PlayListID DESC";
             ResultSet rs = SQLStatement.executeQuery(SQLQuery);
 
-            String MusicResults = "GetRecommendedTracksUser:\n" +
-                    "PlayListName: " + PlayListName + "\n";    
+            String MusicResults = "";
+            
             while (rs.next())
             {
                 MusicResults = MusicResults + rs.getString("TrackName") + ",";
@@ -459,7 +457,7 @@ public class GeneratePlayLists
         {
             System.err.println("Error executing query");
             err.printStackTrace(System.err);
-            return "GetRecommendedTracksUser: Database Error";
+            return "Database Error";
         }
     }
     
@@ -472,8 +470,7 @@ public class GeneratePlayLists
         
         if (!User.AuthenticateUser(UserID, UserPassword, SQLStatement))
         {
-            return "GetRecommendedTracksSystem: Incorrect UserID or Password."
-                    + " Query not executed.";
+            return "Incorrect UserID or Password. Query not executed.";
         }
         
         try
@@ -500,8 +497,8 @@ public class GeneratePlayLists
                     "ORDER BY PlayList.PlayListID DESC";
             ResultSet rs = SQLStatement.executeQuery(SQLQuery);
 
-            String MusicResults = "GetRecommendedTracksSystem:\n" +
-                    "PlayListName: " + PlayListName + "\n";    
+            String MusicResults = "";
+            
             while (rs.next())
             {
                 MusicResults = MusicResults + rs.getString("TrackName") + ",";
@@ -515,7 +512,7 @@ public class GeneratePlayLists
         {
             System.err.println("Error executing query");
             err.printStackTrace(System.err);
-            return "GetRecommendedTracksSystem: Database Error";
+            return "Database Error";
         }
     }
 
@@ -892,20 +889,20 @@ public class GeneratePlayLists
                 String MoodID = "-1";
                 if (rs.next())
                 {
-                    MoodID = "TrackStarted: MoodID: " + rs.getString("MoodID");
+                    MoodID = rs.getString("MoodID");
                 } 
                 return MoodID;
             }
             else
             {
-                return "TrackStarted: MoodID: -1";
+                return "-1";
             }
         }
         catch (SQLException err)
         {
             System.err.println("Error executing query");
             err.printStackTrace(System.err);
-            return "UserEnterMoodBefore: Database Error";
+            return "Database Error";
         }
     }
     
@@ -1020,8 +1017,7 @@ public class GeneratePlayLists
         
         if (!User.AuthenticateUser(UserID, UserPassword, SQLStatement))
         {
-            return "TrackStarted: Incorrect UserID or Password."
-                    + " Query not executed.";
+            return "Incorrect UserID or Password. Query not executed.";
         }
         
         int TrackID = AddTrack(TrackName, Genre, Artist, Length,
@@ -1040,8 +1036,7 @@ public class GeneratePlayLists
         
         if (!User.AuthenticateUser(UserID, UserPassword, SQLStatement))
         {
-            return "TrackEnded: Incorrect UserID or Password."
-                    + " Query not executed.";
+            return "Incorrect UserID or Password. Query not executed.";
         }
         
         int MoodIDNum = Integer.parseInt(MoodID);
@@ -1049,11 +1044,11 @@ public class GeneratePlayLists
         {
             UserEnterMoodAfter(MoodIDNum, AfterMood, UserLiked, DiaryEntryOne,
                     DiaryEntryTwo, DiaryEntryThree, SQLStatement);
-            return "TrackEnded: " + Integer.toString(MoodIDNum);
+            return Integer.toString(MoodIDNum);
         }
         else
         {
-            return "TrackEnded: -1";
+            return "-1";
         } 
     }
 }
