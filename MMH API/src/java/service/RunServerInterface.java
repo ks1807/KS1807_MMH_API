@@ -65,7 +65,9 @@ public class RunServerInterface
         //...\Glassfish\glassfish4\glassfish\domains\MMH\config\
         String ConfigurationFileName = "MMH_SQLConnectionInfo.ini";
         String Line;
-        String[] ConfigurationItems = new String[5];
+        //Read first five lines of the configuration file only.
+        int NumberofLines = 5;
+        String[] ConfigurationItems = new String[NumberofLines];
         
         try
         {
@@ -73,10 +75,9 @@ public class RunServerInterface
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
             int i = 0;
-            //Read first five lines of the configuration file only
-            while((Line = bufferedReader.readLine()) != null && i < 5)
+            while((Line = bufferedReader.readLine()) != null && i < NumberofLines)
             {
-                //Ignore the line feed.
+                //Ignore the new line which is treated as an empty string.
                 if (!Line.equals(""))
                 {
                     ConfigurationItems[i] = Line;
@@ -98,6 +99,7 @@ public class RunServerInterface
         //Get the part of the configuration line between the single quotes.
         String[] ConfigStrings = new String[5];
         Pattern p = Pattern.compile("'([^']*)'");
+        
         for (int i = 0; i < 5; i++)
         {
             Matcher m = p.matcher(ConfigurationItems[i]);
@@ -115,6 +117,7 @@ public class RunServerInterface
         String DBUser = ConfigStrings[3];
         String DBUserPassword = ConfigStrings[4];
 
+        //Build the connection string based on what is in the file.
         String JDBC_URL = ServerConnectionType + "://" +
             ServerName + ":" + ServerPort + ";databasename=" + DatabaseName +
             ";user=" + DBUser + ";password=" + DBUserPassword + ";";
@@ -153,7 +156,7 @@ public class RunServerInterface
              GeneratePlayLists Playlist = new GeneratePlayLists();
              
              /*Depending on which query has been called by the API, run the
-             relavant function and resturn the result (if any).*/
+             relavant function and return the result.*/
             switch (QueryName)
             {
                 case "CheckMoodEntry":
@@ -250,6 +253,7 @@ public class RunServerInterface
                                 QueryContents[0], QueryContents[1], SQLStatement);
                     break;
                 default:
+                    Result = "Invalid query name!";
                     break;
             }
             
