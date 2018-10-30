@@ -9,8 +9,8 @@ import java.util.Date;
 
 public class GeneratePlayLists
 {
-    private static int AddTrack(String TrackName, String Genre, String Artist,
-            String Length, Statement SQLStatement)
+    private static int AddTrack(String SpotifyTrackID, String TrackName,
+            String Genre, String Artist, String Length, Statement SQLStatement)
     {
         try
         {
@@ -33,9 +33,11 @@ public class GeneratePlayLists
                 ID of the newly inserted record. Set the
                 NumberOfTimesListened as 1*/
                 SQLQuery = "SET NOCOUNT ON; INSERT INTO MusicTrack (TrackName, "
-                        + "Genre, Artist, Length, NumberOfTimesListened)\n" +
+                        + "Genre, Artist, Length, NumberOfTimesListened, "
+                        + "SpotifyTrackID)\n" +
                         "VALUES('" + TrackName + "', '" + Genre + "', '" +
-                        Artist + "', '" + Length + "', " + 1 + "); "
+                        Artist + "', '" + Length + "', " + 1 + ", '" +
+                        SpotifyTrackID + "'); "
                         + "SELECT SCOPE_IDENTITY() AS NewTrackID";
                 
                 rs = SQLStatement.executeQuery(SQLQuery);
@@ -426,8 +428,8 @@ public class GeneratePlayLists
             specfic UserID.
             Note the complex joining of MusicTrack, Playlist and TracksInPlaylist
             that are required to bring back the correct track names.*/
-            String SQLQuery = "SELECT DISTINCT TOP (10) TrackName, Genre, "
-                    + "Artist, Length, PlayListName,"
+            String SQLQuery = "SELECT DISTINCT TOP (10) SpotifyTrackID, "
+                    + "TrackName, Genre, Artist, Length, PlayListName, "
                     + "MusicTrack.TrackID, PlayList.PlayListID, "
                     + "TracksInPlayList.UserID " +
                     "FROM MusicTrack " +
@@ -446,6 +448,7 @@ public class GeneratePlayLists
             
             while (rs.next())
             {
+                MusicResults = MusicResults + rs.getString("SpotifyTrackID") + ",";
                 MusicResults = MusicResults + rs.getString("TrackName") + ",";
                 MusicResults = MusicResults + rs.getString("Genre") + ",";
                 MusicResults = MusicResults + rs.getString("Artist") + ",";
@@ -481,8 +484,8 @@ public class GeneratePlayLists
             specfic UserID.
             Note the complex joining of MusicTrack, Playlist and TracksInPlaylist
             that are required to bring back the correct track names.*/
-            String SQLQuery = "SELECT DISTINCT TOP (10) TrackName, Genre, "
-                    + "Artist, Length, PlayListName,"
+            String SQLQuery = "SELECT DISTINCT TOP (10) SpotifyTrackID, "
+                    + "TrackName, Genre, Artist, Length, PlayListName, "
                     + "MusicTrack.TrackID, PlayList.PlayListID, "
                     + "TracksInPlayList.UserID " +
                     "FROM MusicTrack " +
@@ -501,6 +504,7 @@ public class GeneratePlayLists
             
             while (rs.next())
             {
+                MusicResults = MusicResults + rs.getString("SpotifyTrackID") + ",";
                 MusicResults = MusicResults + rs.getString("TrackName") + ",";
                 MusicResults = MusicResults + rs.getString("Genre") + ",";
                 MusicResults = MusicResults + rs.getString("Artist") + ",";
@@ -1009,9 +1013,9 @@ public class GeneratePlayLists
         }
     }
 
-    public static String TrackStarted(String TrackName, String Genre,
-            String Artist, String Length, String BeforeMood, String UserID,
-            String UserPassword, Statement SQLStatement)
+    public static String TrackStarted(String SpotifyTrackID, String TrackName,
+            String Genre, String Artist, String Length, String BeforeMood,
+            String UserID, String UserPassword, Statement SQLStatement)
     {
         ApplicationUserQueries User = new ApplicationUserQueries();
         
@@ -1020,17 +1024,17 @@ public class GeneratePlayLists
             return "Incorrect UserID or Password. Query not executed.";
         }
         
-        int TrackID = AddTrack(TrackName, Genre, Artist, Length,
+        int TrackID = AddTrack(SpotifyTrackID, TrackName, Genre, Artist, Length,
                 SQLStatement);
         String MoodID = UserEnterMoodBefore(UserID, TrackID, BeforeMood,
                 SQLStatement);
         return MoodID;
     }
     
-    public static String TrackEnded(String MoodID, String AfterMood,
-            String UserLiked, String DiaryEntryOne, String DiaryEntryTwo,
-            String DiaryEntryThree, String UserID, String UserPassword,
-            Statement SQLStatement)
+    public static String TrackEnded(String SpotifyTrackID, String MoodID,
+            String AfterMood, String UserLiked, String DiaryEntryOne,
+            String DiaryEntryTwo, String DiaryEntryThree, String UserID,
+            String UserPassword, Statement SQLStatement)
     {
         ApplicationUserQueries User = new ApplicationUserQueries();
         

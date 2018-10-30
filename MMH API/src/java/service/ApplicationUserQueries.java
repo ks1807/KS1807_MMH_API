@@ -89,8 +89,8 @@ public class ApplicationUserQueries
             /*Gets the last ten music tracks that the user has listened to,
             using the mood after time as the time when the user finished the
             song*/
-            String SQLQuery = "SELECT DISTINCT TOP (10) TrackName, Genre, "
-                    + "Artist, Length, MoodAfterTime "
+            String SQLQuery = "SELECT DISTINCT TOP (10) SpotifyTrackID, "
+                    + "TrackName, Genre, Artist, Length, MoodAfterTime "
                     + "FROM MusicTrack INNER JOIN UserMood ON "
                     + "MusicTrack.TrackID = UserMood.TrackID " +
                     "WHERE UserMood.UserID = '" + UserID + "' " +
@@ -101,6 +101,7 @@ public class ApplicationUserQueries
             String MusicResults = "";    
             while (rs.next())
             {
+                MusicResults = MusicResults + rs.getString("SpotifyTrackID") + ",";
                 MusicResults = MusicResults + rs.getString("TrackName") + ",";
                 MusicResults = MusicResults + rs.getString("Genre") + ",";
                 MusicResults = MusicResults + rs.getString("Artist") + ",";

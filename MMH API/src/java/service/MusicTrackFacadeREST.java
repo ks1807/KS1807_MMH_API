@@ -123,7 +123,8 @@ public class MusicTrackFacadeREST extends AbstractFacade<MusicTrack>
     @GET
     @Path("GetRecommendedTracksSystem/{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
-    public String GetRecommendedTracksSystem(@PathParam("UserID") String UserID,
+    public String GetRecommendedTracksSystem(
+            @PathParam("UserID") String UserID,
             @PathParam("UserPassword") String UserPassword)
     {
         String[] Parameters = new String[2];
@@ -137,10 +138,11 @@ public class MusicTrackFacadeREST extends AbstractFacade<MusicTrack>
     }
     
     @GET
-    @Path("TrackStarted/{TrackName}/{Genre}/{Artist}/{Length}/"
+    @Path("TrackStarted/{SpotifyTrackID}/{TrackName}/{Genre}/{Artist}/{Length}/"
             + "{BeforeMood}/{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
     public String TrackStarted(
+            @PathParam("SpotifyTrackID") String SpotifyTrackID,
             @PathParam("TrackName") String TrackName,
             @PathParam("Genre") String Genre,
             @PathParam("Artist") String Artist,
@@ -149,46 +151,13 @@ public class MusicTrackFacadeREST extends AbstractFacade<MusicTrack>
             @PathParam("UserID") String UserID,
             @PathParam("UserPassword") String UserPassword)
     {
-        String[] Parameters = new String[7];
-        Parameters[0] = TrackName;
-        Parameters[1] = Genre;
-        Parameters[2] = Artist;
-        Parameters[3] = Length;
-        Parameters[4] = BeforeMood;
-        Parameters[5] = UserID;
-        Parameters[6] = UserPassword;
-        
-        Parameters[0] = ServerInterface.SanitiseURL(Parameters[0]);
-        Parameters[1] = ServerInterface.SanitiseURL(Parameters[1]);
-        Parameters[2] = ServerInterface.SanitiseURL(Parameters[2]);
-        Parameters[3] = ServerInterface.SanitiseURL(Parameters[3]);
-        Parameters[4] = ServerInterface.SanitiseURL(Parameters[4]);
-        Parameters[5] = ServerInterface.SanitiseURL(Parameters[5]);
-        Parameters[6] = ServerInterface.SanitiseURL(Parameters[6]);
-        
-        return ServerInterface.ConnectToServer("TrackStarted", Parameters);
-    }
-    
-    @GET
-    @Path("TrackEnded/{MoodID}/{AfterMood}/{UserLiked}/{DiaryEntryOne}/"
-            + "{DiaryEntryTwo}/{DiaryEntryThree}/{UserID}/{UserPassword}")
-    @Produces({ MediaType.TEXT_PLAIN })
-    public String TrackEnded(@PathParam("MoodID") String MoodID,
-            @PathParam("AfterMood") String AfterMood,
-            @PathParam("UserLiked") String UserLiked,
-            @PathParam("DiaryEntryOne") String DiaryEntryOne,
-            @PathParam("DiaryEntryTwo") String DiaryEntryTwo,
-            @PathParam("DiaryEntryThree") String DiaryEntryThree,
-            @PathParam("UserID") String UserID,
-            @PathParam("UserPassword") String UserPassword)
-    {
         String[] Parameters = new String[8];
-        Parameters[0] = MoodID;
-        Parameters[1] = AfterMood;
-        Parameters[2] = UserLiked;
-        Parameters[3] = DiaryEntryOne;
-        Parameters[4] = DiaryEntryTwo;
-        Parameters[5] = DiaryEntryThree;
+        Parameters[0] = SpotifyTrackID;
+        Parameters[1] = TrackName;
+        Parameters[2] = Genre;
+        Parameters[3] = Artist;
+        Parameters[4] = Length;
+        Parameters[5] = BeforeMood;
         Parameters[6] = UserID;
         Parameters[7] = UserPassword;
         
@@ -200,6 +169,44 @@ public class MusicTrackFacadeREST extends AbstractFacade<MusicTrack>
         Parameters[5] = ServerInterface.SanitiseURL(Parameters[5]);
         Parameters[6] = ServerInterface.SanitiseURL(Parameters[6]);
         Parameters[7] = ServerInterface.SanitiseURL(Parameters[7]);
+        
+        return ServerInterface.ConnectToServer("TrackStarted", Parameters);
+    }
+    
+    @GET
+    @Path("TrackEnded/{SpotifyTrackID}/{MoodID}/{AfterMood}/{UserLiked}/{DiaryEntryOne}/"
+            + "{DiaryEntryTwo}/{DiaryEntryThree}/{UserID}/{UserPassword}")
+    @Produces({ MediaType.TEXT_PLAIN })
+    public String TrackEnded(@PathParam("SpotifyTrackID") String SpotifyTrackID,
+            @PathParam("MoodID") String MoodID,
+            @PathParam("AfterMood") String AfterMood,
+            @PathParam("UserLiked") String UserLiked,
+            @PathParam("DiaryEntryOne") String DiaryEntryOne,
+            @PathParam("DiaryEntryTwo") String DiaryEntryTwo,
+            @PathParam("DiaryEntryThree") String DiaryEntryThree,
+            @PathParam("UserID") String UserID,
+            @PathParam("UserPassword") String UserPassword)
+    {
+        String[] Parameters = new String[9];
+        Parameters[0] = SpotifyTrackID;
+        Parameters[1] = MoodID;
+        Parameters[2] = AfterMood;
+        Parameters[3] = UserLiked;
+        Parameters[4] = DiaryEntryOne;
+        Parameters[5] = DiaryEntryTwo;
+        Parameters[6] = DiaryEntryThree;
+        Parameters[7] = UserID;
+        Parameters[8] = UserPassword;
+        
+        Parameters[0] = ServerInterface.SanitiseURL(Parameters[0]);
+        Parameters[1] = ServerInterface.SanitiseURL(Parameters[1]);
+        Parameters[2] = ServerInterface.SanitiseURL(Parameters[2]);
+        Parameters[3] = ServerInterface.SanitiseURL(Parameters[3]);
+        Parameters[4] = ServerInterface.SanitiseURL(Parameters[4]);
+        Parameters[5] = ServerInterface.SanitiseURL(Parameters[5]);
+        Parameters[6] = ServerInterface.SanitiseURL(Parameters[6]);
+        Parameters[7] = ServerInterface.SanitiseURL(Parameters[7]);
+        Parameters[8] = ServerInterface.SanitiseURL(Parameters[8]);
         
         return ServerInterface.ConnectToServer("TrackEnded", Parameters);
     }
