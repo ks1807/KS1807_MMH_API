@@ -52,8 +52,6 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
             return -1;
         }
     }
@@ -167,9 +165,6 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
         }
     }
     
@@ -271,9 +266,7 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            return "Database Error";
+            return "Error: CheckMoodEntry";
         }
     }
     
@@ -401,9 +394,6 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
             return TrackIDs;
         }
     }
@@ -458,9 +448,7 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            return "Database Error";
+            return "Error: GetRecommendedTracksUser";
         }
     }
     
@@ -514,9 +502,7 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            return "Database Error";
+            return "Error: GetRecommendedTracksSystem";
         }
     }
 
@@ -563,9 +549,6 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
             return TrackIDs;
         }
     }
@@ -713,9 +696,6 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
             return new String[0][0];
         }
     }
@@ -859,8 +839,6 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
             return -1;
         }
     }
@@ -904,9 +882,7 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            return "Database Error";
+            return "Error: UserEnterMoodBefore";
         }
     }
     
@@ -998,7 +974,6 @@ public class GeneratePlayLists
                     
                     SQLStatement.execute(SQLQuery);
                 }
-                
                 AddTracksToPlaylist(UserID, SQLStatement);                
                 rs.close();
                 return true;
@@ -1007,8 +982,6 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
             return false;
         }
     }

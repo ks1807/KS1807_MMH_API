@@ -68,10 +68,7 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "Error: GetMoodList";
         }
     }
     
@@ -115,10 +112,7 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "Error: GetMusicHistory";
         }
     }
     
@@ -156,10 +150,7 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "Error: GetUserDetails";
         }
     }
     
@@ -199,10 +190,7 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "Error: GetUserDetailsRegistration";
         }
     }
     
@@ -232,9 +220,6 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
             return "-1";
         }
     }
@@ -257,10 +242,7 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "Error: GetUserPassword";
         }
     }
     
@@ -294,10 +276,7 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "Error: GetUserSettings";
         }
     }
     
@@ -330,10 +309,7 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "Error: IsEmailAddressUnique";
         }
     }
     
@@ -350,9 +326,6 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
             return false;
         }
     }
@@ -364,7 +337,7 @@ public class ApplicationUserQueries
     {
         try
         {
-            String UserID = "";
+            String UserID = "-1";
             
             //Make the Email Address all lowercase to ensure case insensitive search.
             EmailAddress = EmailAddress.toLowerCase();
@@ -377,7 +350,7 @@ public class ApplicationUserQueries
                     + AcceptedEthicsStatement + "', '" + UserPassword + "'" + ");"
                     + "SELECT SCOPE_IDENTITY() AS UserID";
                 ResultSet rs = SQLStatement.executeQuery(SQLQuery);
-
+                
                 if (rs.next())
                 {
                     UserID = rs.getString("UserID");
@@ -389,14 +362,20 @@ public class ApplicationUserQueries
                     //Return -1 if it failed.
                     UserID = "-1";
                 }
+                
+                if (DateOfBirth.equals(""))
+                {
+                    String SQLResult = SetDateOfBirthAsNULL(UserID, SQLStatement);
+                    if (SQLResult.equals("Error: SetDateOfBirthAsNULL"))
+                    {
+                        return SQLResult;
+                    }
+                }        
                 return UserID;
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "Error: InsertNewUser";
         }
     }
     
@@ -418,15 +397,21 @@ public class ApplicationUserQueries
                     "UserPassword = '" + UserPassword + "' "
                     + "WHERE UserID = '" + UserID + "'";
                 SQLStatement.execute(SQLQuery);
+                
+                if (DateOfBirth.equals(""))
+                {
+                    String SQLResult = SetDateOfBirthAsNULL(UserID, SQLStatement);
+                    if (SQLResult.equals("Error: SetDateOfBirthAsNULL"))
+                    {
+                        return SQLResult;
+                    }
+                }
                 return "Successful";
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
+            return "Error: UpdateNewUser";
         }
-        return "";
     }
     
     public String UpdatePassword(String NewPassword, String UserID,
@@ -446,11 +431,8 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
+            return "Error: UpdatePassword";
         }
-        return "";
     }
     
     public String UpdateUser(String FirstName, String LastName,
@@ -474,15 +456,21 @@ public class ApplicationUserQueries
                     "EmailAddress = '" + EmailAddress + "' " +
                     "WHERE UserID = '" + UserID + "'";
                 SQLStatement.execute(SQLQuery);
+                
+                if (DateOfBirth.equals(""))
+                {
+                    String SQLResult = SetDateOfBirthAsNULL(UserID, SQLStatement);
+                    if (SQLResult.equals("Error: SetDateOfBirthAsNULL"))
+                    {
+                        return SQLResult;
+                    }
+                }
                 return "Successful";
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
+            return "Error: UpdateUser";
         }
-        return "";
     }
     
     public String UpdateUserSecondPage(String MusicQuestionOne,
@@ -508,11 +496,8 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
+            return "Error: UpdateUserSecondPage";
         }
-        return "";
     }
     
     public String UpdateSettings (String MakeRecommendations,
@@ -535,10 +520,25 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "Error: UpdateSettings";
+        }
+    }
+    
+    /*SQL Server has a rule that if an empty string is inserted/updated for a
+    date field then the date is 1900-01-01. So this function forces a DB NULL
+    to be set after the insert/update.*/
+    private String SetDateOfBirthAsNULL(String UserID, Statement SQLStatement)
+    {
+        try
+        {
+            String SQLQuery = "UPDATE UserAccount SET DateOfBirth = NULL "
+                    + "WHERE UserID = '" + UserID + "'";
+                SQLStatement.execute(SQLQuery);
+                return "";
+        }
+        catch (SQLException err)
+        {
+            return "Error: SetDateOfBirthAsNULL";
         }
     }
     
