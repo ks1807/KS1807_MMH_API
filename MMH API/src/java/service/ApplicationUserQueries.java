@@ -90,11 +90,13 @@ public class ApplicationUserQueries
             using the mood after time as the time when the user finished the
             song*/
             String SQLQuery = "SELECT DISTINCT TOP (10) SpotifyTrackID, "
-                    + "TrackName, Genre, Artist, Length, MoodAfterTime "
+                    + "TrackName, Genre, Artist, Length, MoodAfterTime, "
+                    + "MoodBefore, MoodAfter "
                     + "FROM MusicTrack INNER JOIN UserMood ON "
                     + "MusicTrack.TrackID = UserMood.TrackID " +
                     "WHERE UserMood.UserID = '" + UserID + "' " +
-                    "AND MoodAfterTime IS NOT NULL AND MoodBeforeTime IS NOT NULL" +
+                    "AND MoodAfterTime IS NOT NULL AND MoodBeforeTime "
+                    + "IS NOT NULL" +
                     " ORDER BY UserMood.MoodAfterTime DESC";
             ResultSet rs = SQLStatement.executeQuery(SQLQuery);
 
@@ -105,7 +107,9 @@ public class ApplicationUserQueries
                 MusicResults = MusicResults + rs.getString("TrackName") + ",";
                 MusicResults = MusicResults + rs.getString("Genre") + ",";
                 MusicResults = MusicResults + rs.getString("Artist") + ",";
-                MusicResults = MusicResults + rs.getString("Length") + "\n";
+                MusicResults = MusicResults + rs.getString("Length") + ",";
+                MusicResults = MusicResults + rs.getString("MoodBefore") + ",";
+                MusicResults = MusicResults + rs.getString("MoodAfter") + "\n";
             }          
             return MusicResults;           
         }
@@ -170,7 +174,7 @@ public class ApplicationUserQueries
         try
         {
             String SQLQuery = "SELECT FirstName, LastName, EmailAddress, "
-                    + "DateOfBirth, Gender "
+                    + "DateOfBirth, Gender, AcceptedEthicsStatement "
                     + "FROM UserAccount WHERE UserID = '" + UserID + "'";
             ResultSet rs = SQLStatement.executeQuery(SQLQuery);
 
@@ -188,6 +192,8 @@ public class ApplicationUserQueries
                         rs.getString("DateOfBirth") + "\n";
                 UserDetails = UserDetails + "Gender: " +
                         rs.getString("Gender") + "\n";
+                UserDetails = UserDetails + "AcceptedEthicsStatement: " +
+                        rs.getString("AcceptedEthicsStatement") + "\n";
             }
             return UserDetails;           
         }
