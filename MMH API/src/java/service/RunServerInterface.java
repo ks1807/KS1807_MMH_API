@@ -17,7 +17,7 @@ public class RunServerInterface
     //https://en.wikipedia.org/wiki/Percent-encoding
     public static String URLReplace(String TheString)
     {
-            TheString = TheString.replace("20", " ");
+            TheString = TheString.replace("%20", " ");
             TheString = TheString.replace("%3A", ":");
             TheString = TheString.replace("%3B", "/");
             TheString = TheString.replace("%2F", ";");
