@@ -107,7 +107,13 @@ public class ApplicationUserQueries
                 MusicResults = MusicResults + rs.getString("Length") + ",";
                 MusicResults = MusicResults + rs.getString("MoodBefore") + ",";
                 MusicResults = MusicResults + rs.getString("MoodAfter") + "\n";
-            }          
+            }
+            
+            //Return dashes to sigify that no records were returned.
+            if (MusicResults.equals(""))
+            {
+                MusicResults = "-,-,-,-,-,-,-";
+            }           
             return MusicResults;           
         }
         catch (SQLException err)

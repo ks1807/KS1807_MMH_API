@@ -444,6 +444,11 @@ public class GeneratePlayLists
                 MusicResults = MusicResults + rs.getString("Artist") + ",";
                 MusicResults = MusicResults + rs.getString("Length") + "\n";              
             }
+            //Return dashes to sigify that no records were returned.
+            if (MusicResults.equals(""))
+            {
+                MusicResults = "-,-,-,-,-";
+            }
             return MusicResults;           
         }
         catch (SQLException err)
@@ -497,6 +502,11 @@ public class GeneratePlayLists
                 MusicResults = MusicResults + rs.getString("Genre") + ",";
                 MusicResults = MusicResults + rs.getString("Artist") + ",";
                 MusicResults = MusicResults + rs.getString("Length") + "\n";              
+            }
+            //Return dashes to sigify that no records were returned.
+            if (MusicResults.equals(""))
+            {
+                MusicResults = "-,-,-,-,-";
             }
             return MusicResults;           
         }
