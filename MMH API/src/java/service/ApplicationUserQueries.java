@@ -200,6 +200,46 @@ public class ApplicationUserQueries
         }
     }
     
+    public String GetUserRegistrationQuestions(String UserID, String
+            UserPassword, Statement SQLStatement)
+    {
+        if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
+        {
+            return "Incorrect UserID or Password. Query not executed.";
+        }
+        
+        try
+        {
+            String SQLQuery = "SELECT MusicQuestionOne, MusicQuestionTwo, "
+                    + "MusicQuestionThree, MusicQuestionFour "
+                    + "FROM UserAccount WHERE UserID = '" + UserID + "'";
+            ResultSet rs = SQLStatement.executeQuery(SQLQuery);
+
+            String UserQuestions = "";
+            
+            if (rs.next())
+            {
+                UserQuestions = UserQuestions + "MusicQuestionOne: " +
+                        rs.getString("MusicQuestionOne") + "\n";
+                UserQuestions = UserQuestions + "MusicQuestionTwo: " +
+                        rs.getString("MusicQuestionTwo") + "\n";
+                UserQuestions = UserQuestions + "MusicQuestionThree: " +
+                        rs.getString("MusicQuestionThree") + "\n";
+                UserQuestions = UserQuestions + "MusicQuestionFour: " +
+                        rs.getString("MusicQuestionFour") + "\n";
+            }
+            
+            /*If the question wasn't answered it will be null, return this as
+            not answered instead.*/
+            UserQuestions = UserQuestions.replace("null", "Not Answered");          
+            return UserQuestions;           
+        }
+        catch (SQLException err)
+        {
+            return "Error: GetUserRegistrationQuestions";
+        }
+    }
+    
     public String GetUserID(String EmailAddress, Statement SQLStatement)
     {
         try

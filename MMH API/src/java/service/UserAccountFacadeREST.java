@@ -123,6 +123,22 @@ public class UserAccountFacadeREST extends AbstractFacade<UserAccount>
     }
     
     @GET
+    @Path("GetUserRegistrationQuestions/{UserID}/{UserPassword}")
+    @Produces({ MediaType.TEXT_PLAIN })
+    public String GetUserRegistrationQuestions(@PathParam("UserID") String UserID,
+            @PathParam("UserPassword") String UserPassword)
+    {
+        String[] Parameters = new String[2];
+        Parameters[0] = UserID;
+        Parameters[1] = UserPassword;
+        Parameters[0] = ServerInterface.SanitiseURL(Parameters[0]);
+        Parameters[1] = ServerInterface.SanitiseURL(Parameters[1]);
+        
+        return ServerInterface.ConnectToServer("GetUserRegistrationQuestions",
+                Parameters);
+    }
+    
+    @GET
     @Path("GetUserDetails/{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
     public String GetUserDetails(@PathParam("UserID") String UserID,

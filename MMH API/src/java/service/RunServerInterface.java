@@ -196,6 +196,10 @@ public class RunServerInterface
                     Result = UserQuery.GetUserDetailsRegistration(
                             QueryContents[0], QueryContents[1], SQLStatement);
                     break;
+                case "GetUserRegistrationQuestions":
+                    Result = UserQuery.GetUserRegistrationQuestions(
+                            QueryContents[0], QueryContents[1], SQLStatement);
+                    break;
                 case "GetUserDetails":
                     Result = UserQuery.GetUserDetails(QueryContents[0],
                             QueryContents[1], SQLStatement);
