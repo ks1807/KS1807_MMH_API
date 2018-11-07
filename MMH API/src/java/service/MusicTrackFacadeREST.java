@@ -175,7 +175,8 @@ public class MusicTrackFacadeREST extends AbstractFacade<MusicTrack>
     
     @GET
     @Path("TrackEnded/{SpotifyTrackID}/{MoodID}/{AfterMood}/{UserLiked}/{DiaryEntryOne}/"
-            + "{DiaryEntryTwo}/{DiaryEntryThree}/{UserID}/{UserPassword}")
+            + "{DiaryEntryTwo}/{DiaryEntryThree}/{DiaryEntryFour}/"
+            + "{DiaryEntryFive}/{UserID}/{UserPassword}")
     @Produces({ MediaType.TEXT_PLAIN })
     public String TrackEnded(@PathParam("SpotifyTrackID") String SpotifyTrackID,
             @PathParam("MoodID") String MoodID,
@@ -184,10 +185,12 @@ public class MusicTrackFacadeREST extends AbstractFacade<MusicTrack>
             @PathParam("DiaryEntryOne") String DiaryEntryOne,
             @PathParam("DiaryEntryTwo") String DiaryEntryTwo,
             @PathParam("DiaryEntryThree") String DiaryEntryThree,
+            @PathParam("DiaryEntryFour") String DiaryEntryFour,
+            @PathParam("DiaryEntryFive") String DiaryEntryFive,
             @PathParam("UserID") String UserID,
             @PathParam("UserPassword") String UserPassword)
     {
-        String[] Parameters = new String[9];
+        String[] Parameters = new String[11];
         Parameters[0] = SpotifyTrackID;
         Parameters[1] = MoodID;
         Parameters[2] = AfterMood;
@@ -195,8 +198,10 @@ public class MusicTrackFacadeREST extends AbstractFacade<MusicTrack>
         Parameters[4] = DiaryEntryOne;
         Parameters[5] = DiaryEntryTwo;
         Parameters[6] = DiaryEntryThree;
-        Parameters[7] = UserID;
-        Parameters[8] = UserPassword;
+        Parameters[7] = DiaryEntryFour;
+        Parameters[8] = DiaryEntryFive;
+        Parameters[9] = UserID;
+        Parameters[10] = UserPassword;
         
         Parameters[0] = ServerInterface.SanitiseURL(Parameters[0]);
         Parameters[1] = ServerInterface.SanitiseURL(Parameters[1]);
@@ -207,6 +212,8 @@ public class MusicTrackFacadeREST extends AbstractFacade<MusicTrack>
         Parameters[6] = ServerInterface.SanitiseURL(Parameters[6]);
         Parameters[7] = ServerInterface.SanitiseURL(Parameters[7]);
         Parameters[8] = ServerInterface.SanitiseURL(Parameters[8]);
+        Parameters[9] = ServerInterface.SanitiseURL(Parameters[9]);
+        Parameters[10] = ServerInterface.SanitiseURL(Parameters[10]);
         
         return ServerInterface.ConnectToServer("TrackEnded", Parameters);
     }
