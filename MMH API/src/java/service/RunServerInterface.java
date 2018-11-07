@@ -35,6 +35,8 @@ public class RunServerInterface
             TheString = TheString.replace("%2B", "+");
             TheString = TheString.replace("%2C", ",");
             TheString = TheString.replace("%3F", "?");
+            //Get rid of all commas as this will cause issues with return values.
+            TheString = TheString.replace(",", "");
             return TheString;
     }
     
