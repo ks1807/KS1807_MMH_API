@@ -52,8 +52,6 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
             return -1;
         }
     }
@@ -167,18 +165,13 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
         }
     }
     
     //Checks to see if the user should be prompted to enter their mood.
     public static String CheckMoodEntry(String UserID, String UserPassword,
             Statement SQLStatement)
-    {
-        String QueryName = "CheckMoodEntry";
-        
+    {   
         ApplicationUserQueries User = new ApplicationUserQueries();
         
         if (!User.AuthenticateUser(UserID, UserPassword, SQLStatement))
@@ -216,6 +209,12 @@ public class GeneratePlayLists
             }
             rs.close();
 
+            //No existing history, just always return yes if so.
+            if (MoodAfterTimeString.equals(""))
+            {
+                return "Yes";
+            }
+            
             try
             {
                 Date MoodAfterTime = DateTimeFromStringSQLFormat(
@@ -263,17 +262,15 @@ public class GeneratePlayLists
                     default :
                         return "Invalid Setting";
                 }
-            } catch (ParseException e)
+            }
+            catch (ParseException e)
             {
-                e.printStackTrace();
-                return "Database Error";
+                return "Error: CheckMoodEntry";
             }
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            return "Database Error";
+            return "Error: CheckMoodEntry";
         }
     }
     
@@ -401,9 +398,6 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
             return TrackIDs;
         }
     }
@@ -454,13 +448,16 @@ public class GeneratePlayLists
                 MusicResults = MusicResults + rs.getString("Artist") + ",";
                 MusicResults = MusicResults + rs.getString("Length") + "\n";              
             }
+            //Return dashes to sigify that no records were returned.
+            if (MusicResults.equals(""))
+            {
+                MusicResults = "-,-,-,-,-";
+            }
             return MusicResults;           
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            return "Database Error";
+            return "Error: GetRecommendedTracksUser";
         }
     }
     
@@ -510,13 +507,16 @@ public class GeneratePlayLists
                 MusicResults = MusicResults + rs.getString("Artist") + ",";
                 MusicResults = MusicResults + rs.getString("Length") + "\n";              
             }
+            //Return dashes to sigify that no records were returned.
+            if (MusicResults.equals(""))
+            {
+                MusicResults = "-,-,-,-,-";
+            }
             return MusicResults;           
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            return "Database Error";
+            return "Error: GetRecommendedTracksSystem";
         }
     }
 
@@ -563,9 +563,6 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
             return TrackIDs;
         }
     }
@@ -713,9 +710,6 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
             return new String[0][0];
         }
     }
@@ -859,8 +853,6 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
             return -1;
         }
     }
@@ -904,15 +896,14 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            return "Database Error";
+            return "Error: UserEnterMoodBefore";
         }
     }
     
     private static boolean UserEnterMoodAfter(int MoodID, String AfterMood,
             String UserLiked, String DiaryEntryOne, String DiaryEntryTwo,
-            String DiaryEntryThree, Statement SQLStatement)
+            String DiaryEntryThree, String DiaryEntryFour,
+            String DiaryEntryFive, Statement SQLStatement)
     {
         try
         {
@@ -991,14 +982,15 @@ public class GeneratePlayLists
                     String DiaryEntryTime = SQLDateFormat.format(CurrentDate);
 
                     SQLQuery = "INSERT INTO UserDiary (UserID, DiaryEntryDate, "
-                            + "DiaryEntryOne, DiaryEntryTwo, DiaryEntryThree)\n" +
+                            + "DiaryEntryOne, DiaryEntryTwo, DiaryEntryThree, "
+                            + "DiaryEntryFour, DiaryEntryFive)\n" +
                             "VALUES('" + UserID + "', '" + DiaryEntryTime +
-                            "', '" + DiaryEntryOne +"', '" + DiaryEntryTwo + "', '"
-                            + DiaryEntryThree + "')";
+                            "', '" + DiaryEntryOne + "', '" + DiaryEntryTwo + "', '"
+                            + DiaryEntryThree + "', '" + DiaryEntryFour + "', "
+                            + "'" + DiaryEntryFive + "')";
                     
                     SQLStatement.execute(SQLQuery);
                 }
-                
                 AddTracksToPlaylist(UserID, SQLStatement);                
                 rs.close();
                 return true;
@@ -1007,8 +999,6 @@ public class GeneratePlayLists
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
             return false;
         }
     }
@@ -1033,8 +1023,9 @@ public class GeneratePlayLists
     
     public static String TrackEnded(String SpotifyTrackID, String MoodID,
             String AfterMood, String UserLiked, String DiaryEntryOne,
-            String DiaryEntryTwo, String DiaryEntryThree, String UserID,
-            String UserPassword, Statement SQLStatement)
+            String DiaryEntryTwo, String DiaryEntryThree, String DiaryEntryFour,
+            String DiaryEntryFive, String UserID, String UserPassword,
+            Statement SQLStatement)
     {
         ApplicationUserQueries User = new ApplicationUserQueries();
         
@@ -1047,7 +1038,8 @@ public class GeneratePlayLists
         if (MoodIDNum > 0)
         {
             UserEnterMoodAfter(MoodIDNum, AfterMood, UserLiked, DiaryEntryOne,
-                    DiaryEntryTwo, DiaryEntryThree, SQLStatement);
+                    DiaryEntryTwo, DiaryEntryThree, DiaryEntryFour,
+                    DiaryEntryFive, SQLStatement);
             return Integer.toString(MoodIDNum);
         }
         else

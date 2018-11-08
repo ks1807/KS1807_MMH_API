@@ -17,7 +17,7 @@ public class RunServerInterface
     //https://en.wikipedia.org/wiki/Percent-encoding
     public static String URLReplace(String TheString)
     {
-            TheString = TheString.replace("20", " ");
+            TheString = TheString.replace("%20", " ");
             TheString = TheString.replace("%3A", ":");
             TheString = TheString.replace("%3B", "/");
             TheString = TheString.replace("%2F", ";");
@@ -35,6 +35,8 @@ public class RunServerInterface
             TheString = TheString.replace("%2B", "+");
             TheString = TheString.replace("%2C", ",");
             TheString = TheString.replace("%3F", "?");
+            //Get rid of all commas as this will cause issues with return values.
+            TheString = TheString.replace(",", "");
             return TheString;
     }
     
@@ -175,7 +177,8 @@ public class RunServerInterface
                             QueryContents[1], QueryContents[2],
                             QueryContents[3], QueryContents[4],
                             QueryContents[5], QueryContents[6],
-                            QueryContents[7], QueryContents[8], SQLStatement);
+                            QueryContents[7], QueryContents[8],
+                            QueryContents[9], QueryContents[10], SQLStatement);
                     break;
                 case "GetMoodList":
                     Result = UserQuery.GetMoodList(SQLStatement);
@@ -194,6 +197,10 @@ public class RunServerInterface
                     break; 
                 case "GetUserDetailsRegistration":
                     Result = UserQuery.GetUserDetailsRegistration(
+                            QueryContents[0], QueryContents[1], SQLStatement);
+                    break;
+                case "GetUserRegistrationQuestions":
+                    Result = UserQuery.GetUserRegistrationQuestions(
                             QueryContents[0], QueryContents[1], SQLStatement);
                     break;
                 case "GetUserDetails":

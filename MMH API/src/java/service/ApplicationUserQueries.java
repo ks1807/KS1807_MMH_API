@@ -68,10 +68,7 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "Error: GetMoodList";
         }
     }
     
@@ -90,11 +87,13 @@ public class ApplicationUserQueries
             using the mood after time as the time when the user finished the
             song*/
             String SQLQuery = "SELECT DISTINCT TOP (10) SpotifyTrackID, "
-                    + "TrackName, Genre, Artist, Length, MoodAfterTime "
+                    + "TrackName, Genre, Artist, Length, MoodAfterTime, "
+                    + "MoodBefore, MoodAfter "
                     + "FROM MusicTrack INNER JOIN UserMood ON "
                     + "MusicTrack.TrackID = UserMood.TrackID " +
                     "WHERE UserMood.UserID = '" + UserID + "' " +
-                    "AND MoodAfterTime IS NOT NULL AND MoodBeforeTime IS NOT NULL" +
+                    "AND MoodAfterTime IS NOT NULL AND MoodBeforeTime "
+                    + "IS NOT NULL" +
                     " ORDER BY UserMood.MoodAfterTime DESC";
             ResultSet rs = SQLStatement.executeQuery(SQLQuery);
 
@@ -105,16 +104,21 @@ public class ApplicationUserQueries
                 MusicResults = MusicResults + rs.getString("TrackName") + ",";
                 MusicResults = MusicResults + rs.getString("Genre") + ",";
                 MusicResults = MusicResults + rs.getString("Artist") + ",";
-                MusicResults = MusicResults + rs.getString("Length") + "\n";
-            }          
+                MusicResults = MusicResults + rs.getString("Length") + ",";
+                MusicResults = MusicResults + rs.getString("MoodBefore") + ",";
+                MusicResults = MusicResults + rs.getString("MoodAfter") + "\n";
+            }
+            
+            //Return dashes to sigify that no records were returned.
+            if (MusicResults.equals(""))
+            {
+                MusicResults = "-,-,-,-,-,-,-";
+            }           
             return MusicResults;           
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "Error: GetMusicHistory";
         }
     }
     
@@ -152,10 +156,7 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "Error: GetUserDetails";
         }
     }
     
@@ -170,7 +171,7 @@ public class ApplicationUserQueries
         try
         {
             String SQLQuery = "SELECT FirstName, LastName, EmailAddress, "
-                    + "DateOfBirth, Gender "
+                    + "DateOfBirth, Gender, AcceptedEthicsStatement "
                     + "FROM UserAccount WHERE UserID = '" + UserID + "'";
             ResultSet rs = SQLStatement.executeQuery(SQLQuery);
 
@@ -188,15 +189,54 @@ public class ApplicationUserQueries
                         rs.getString("DateOfBirth") + "\n";
                 UserDetails = UserDetails + "Gender: " +
                         rs.getString("Gender") + "\n";
+                UserDetails = UserDetails + "AcceptedEthicsStatement: " +
+                        rs.getString("AcceptedEthicsStatement") + "\n";
             }
             return UserDetails;           
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "Error: GetUserDetailsRegistration";
+        }
+    }
+    
+    public String GetUserRegistrationQuestions(String UserID, String
+            UserPassword, Statement SQLStatement)
+    {
+        if (!AuthenticateUser(UserID, UserPassword, SQLStatement))
+        {
+            return "Incorrect UserID or Password. Query not executed.";
+        }
+        
+        try
+        {
+            String SQLQuery = "SELECT MusicQuestionOne, MusicQuestionTwo, "
+                    + "MusicQuestionThree, MusicQuestionFour "
+                    + "FROM UserAccount WHERE UserID = '" + UserID + "'";
+            ResultSet rs = SQLStatement.executeQuery(SQLQuery);
+
+            String UserQuestions = "";
+            
+            if (rs.next())
+            {
+                UserQuestions = UserQuestions + "MusicQuestionOne: " +
+                        rs.getString("MusicQuestionOne") + "\n";
+                UserQuestions = UserQuestions + "MusicQuestionTwo: " +
+                        rs.getString("MusicQuestionTwo") + "\n";
+                UserQuestions = UserQuestions + "MusicQuestionThree: " +
+                        rs.getString("MusicQuestionThree") + "\n";
+                UserQuestions = UserQuestions + "MusicQuestionFour: " +
+                        rs.getString("MusicQuestionFour") + "\n";
+            }
+            
+            /*If the question wasn't answered it will be null, return this as
+            not answered instead.*/
+            UserQuestions = UserQuestions.replace("null", "Not Answered");          
+            return UserQuestions;           
+        }
+        catch (SQLException err)
+        {
+            return "Error: GetUserRegistrationQuestions";
         }
     }
     
@@ -226,9 +266,6 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
             return "-1";
         }
     }
@@ -251,10 +288,7 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "Error: GetUserPassword";
         }
     }
     
@@ -288,10 +322,7 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "Error: GetUserSettings";
         }
     }
     
@@ -324,10 +355,7 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "Error: IsEmailAddressUnique";
         }
     }
     
@@ -344,9 +372,6 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
             return false;
         }
     }
@@ -358,7 +383,7 @@ public class ApplicationUserQueries
     {
         try
         {
-            String UserID = "";
+            String UserID = "-1";
             
             //Make the Email Address all lowercase to ensure case insensitive search.
             EmailAddress = EmailAddress.toLowerCase();
@@ -371,7 +396,7 @@ public class ApplicationUserQueries
                     + AcceptedEthicsStatement + "', '" + UserPassword + "'" + ");"
                     + "SELECT SCOPE_IDENTITY() AS UserID";
                 ResultSet rs = SQLStatement.executeQuery(SQLQuery);
-
+                
                 if (rs.next())
                 {
                     UserID = rs.getString("UserID");
@@ -383,14 +408,20 @@ public class ApplicationUserQueries
                     //Return -1 if it failed.
                     UserID = "-1";
                 }
+                
+                if (DateOfBirth.equals(""))
+                {
+                    String SQLResult = SetDateOfBirthAsNULL(UserID, SQLStatement);
+                    if (SQLResult.equals("Error: SetDateOfBirthAsNULL"))
+                    {
+                        return SQLResult;
+                    }
+                }        
                 return UserID;
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "Error: InsertNewUser";
         }
     }
     
@@ -412,15 +443,21 @@ public class ApplicationUserQueries
                     "UserPassword = '" + UserPassword + "' "
                     + "WHERE UserID = '" + UserID + "'";
                 SQLStatement.execute(SQLQuery);
+                
+                if (DateOfBirth.equals(""))
+                {
+                    String SQLResult = SetDateOfBirthAsNULL(UserID, SQLStatement);
+                    if (SQLResult.equals("Error: SetDateOfBirthAsNULL"))
+                    {
+                        return SQLResult;
+                    }
+                }
                 return "Successful";
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
+            return "Error: UpdateNewUser";
         }
-        return "";
     }
     
     public String UpdatePassword(String NewPassword, String UserID,
@@ -440,11 +477,8 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
+            return "Error: UpdatePassword";
         }
-        return "";
     }
     
     public String UpdateUser(String FirstName, String LastName,
@@ -468,15 +502,21 @@ public class ApplicationUserQueries
                     "EmailAddress = '" + EmailAddress + "' " +
                     "WHERE UserID = '" + UserID + "'";
                 SQLStatement.execute(SQLQuery);
+                
+                if (DateOfBirth.equals(""))
+                {
+                    String SQLResult = SetDateOfBirthAsNULL(UserID, SQLStatement);
+                    if (SQLResult.equals("Error: SetDateOfBirthAsNULL"))
+                    {
+                        return SQLResult;
+                    }
+                }
                 return "Successful";
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
+            return "Error: UpdateUser";
         }
-        return "";
     }
     
     public String UpdateUserSecondPage(String MusicQuestionOne,
@@ -502,11 +542,8 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
+            return "Error: UpdateUserSecondPage";
         }
-        return "";
     }
     
     public String UpdateSettings (String MakeRecommendations,
@@ -529,10 +566,25 @@ public class ApplicationUserQueries
         }
         catch (SQLException err)
         {
-            System.err.println("Error executing query");
-            err.printStackTrace(System.err);
-            System.exit(0);
-            return "";
+            return "Error: UpdateSettings";
+        }
+    }
+    
+    /*SQL Server has a rule that if an empty string is inserted/updated for a
+    date field then the date is 1900-01-01. So this function forces a DB NULL
+    to be set after the insert/update.*/
+    private String SetDateOfBirthAsNULL(String UserID, Statement SQLStatement)
+    {
+        try
+        {
+            String SQLQuery = "UPDATE UserAccount SET DateOfBirth = NULL "
+                    + "WHERE UserID = '" + UserID + "'";
+                SQLStatement.execute(SQLQuery);
+                return "";
+        }
+        catch (SQLException err)
+        {
+            return "Error: SetDateOfBirthAsNULL";
         }
     }
     
