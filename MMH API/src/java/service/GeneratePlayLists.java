@@ -209,6 +209,12 @@ public class GeneratePlayLists
             }
             rs.close();
 
+            //No existing history, just always return yes if so.
+            if (MoodAfterTimeString.equals(""))
+            {
+                return "Yes";
+            }
+            
             try
             {
                 Date MoodAfterTime = DateTimeFromStringSQLFormat(
@@ -256,10 +262,10 @@ public class GeneratePlayLists
                     default :
                         return "Invalid Setting";
                 }
-            } catch (ParseException e)
+            }
+            catch (ParseException e)
             {
-                e.printStackTrace();
-                return "Database Error";
+                return "Error: CheckMoodEntry";
             }
         }
         catch (SQLException err)
